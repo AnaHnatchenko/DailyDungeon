@@ -14,9 +14,9 @@ using System.Windows.Shapes;
 
 namespace DailyDungeon.Pages
 {
-    public partial class LoginWindow : Window
+    public partial class RegisterWindow : Window
     {
-        public LoginWindow()
+        public RegisterWindow()
         {
             InitializeComponent();
         }
@@ -83,14 +83,14 @@ namespace DailyDungeon.Pages
             }
         }
 
-        private void Register_Click(object sender, RoutedEventArgs e)
+        private void SignIn_Click(object sender, RoutedEventArgs e)
         {
-            var registerWindow = new RegisterWindow();
-            registerWindow.Show();
+            var loginWindow = new LoginWindow();
+            loginWindow.Show();
             this.Hide();
         }
 
-        private void SignIn_Click(object sender, RoutedEventArgs e)
+        private void Register_Click(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrEmpty(txtEmail.Text) && !string.IsNullOrEmpty(txtPassword.Password))
             {

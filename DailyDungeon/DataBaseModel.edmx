@@ -1,0 +1,209 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Хранилище DailyDungeonModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "DailyDungeon.dbo.habits" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <EntityType Name="habits">
+          <Key>
+            <PropertyRef Name="id_habit" />
+            <PropertyRef Name="name_habit" />
+            <PropertyRef Name="complexity_habit" />
+            <PropertyRef Name="type_habit" />
+            <PropertyRef Name="is_done" />
+          </Key>
+          <Property Name="id_habit" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name_habit" Type="varchar" MaxLength="60" Nullable="false" />
+          <Property Name="description_habit" Type="varchar" MaxLength="120" />
+          <Property Name="complexity_habit" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="tag_habit" Type="varchar" MaxLength="20" />
+          <Property Name="type_habit" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="is_done" Type="bit" Nullable="false" />
+        </EntityType>
+        <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "DailyDungeon.dbo.tasks" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <EntityType Name="tasks">
+          <Key>
+            <PropertyRef Name="id_task" />
+            <PropertyRef Name="name_task" />
+            <PropertyRef Name="complexity_task" />
+            <PropertyRef Name="deadline_task" />
+            <PropertyRef Name="is_done" />
+          </Key>
+          <Property Name="id_task" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name_task" Type="varchar" MaxLength="60" Nullable="false" />
+          <Property Name="description_task" Type="varchar" MaxLength="120" />
+          <Property Name="complexity_task" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="tag_task" Type="varchar" MaxLength="20" />
+          <Property Name="deadline_task" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="is_done" Type="bit" Nullable="false" />
+        </EntityType>
+        <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "DailyDungeon.dbo.users" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <EntityType Name="users">
+          <Key>
+            <PropertyRef Name="id_user" />
+            <PropertyRef Name="login_user" />
+            <PropertyRef Name="password_user" />
+            <PropertyRef Name="money_count" />
+          </Key>
+          <Property Name="id_user" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="login_user" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="password_user" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="money_count" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="Хранилище DailyDungeonModelContainer">
+          <EntitySet Name="habits" EntityType="Self.habits" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [habits].[id_habit] AS [id_habit], 
+    [habits].[name_habit] AS [name_habit], 
+    [habits].[description_habit] AS [description_habit], 
+    [habits].[complexity_habit] AS [complexity_habit], 
+    [habits].[tag_habit] AS [tag_habit], 
+    [habits].[type_habit] AS [type_habit], 
+    [habits].[is_done] AS [is_done]
+    FROM [dbo].[habits] AS [habits]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="tasks" EntityType="Self.tasks" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [tasks].[id_task] AS [id_task], 
+    [tasks].[name_task] AS [name_task], 
+    [tasks].[description_task] AS [description_task], 
+    [tasks].[complexity_task] AS [complexity_task], 
+    [tasks].[tag_task] AS [tag_task], 
+    [tasks].[deadline_task] AS [deadline_task], 
+    [tasks].[is_done] AS [is_done]
+    FROM [dbo].[tasks] AS [tasks]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="users" EntityType="Self.users" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [users].[id_user] AS [id_user], 
+    [users].[login_user] AS [login_user], 
+    [users].[password_user] AS [password_user], 
+    [users].[money_count] AS [money_count]
+    FROM [dbo].[users] AS [users]</DefiningQuery>
+          </EntitySet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DailyDungeonModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="habits">
+          <Key>
+            <PropertyRef Name="id_habit" />
+            <PropertyRef Name="name_habit" />
+            <PropertyRef Name="complexity_habit" />
+            <PropertyRef Name="type_habit" />
+            <PropertyRef Name="is_done" />
+          </Key>
+          <Property Name="id_habit" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name_habit" Type="String" MaxLength="60" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="description_habit" Type="String" MaxLength="120" FixedLength="false" Unicode="false" />
+          <Property Name="complexity_habit" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="tag_habit" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="type_habit" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="is_done" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tasks">
+          <Key>
+            <PropertyRef Name="id_task" />
+            <PropertyRef Name="name_task" />
+            <PropertyRef Name="complexity_task" />
+            <PropertyRef Name="deadline_task" />
+            <PropertyRef Name="is_done" />
+          </Key>
+          <Property Name="id_task" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name_task" Type="String" MaxLength="60" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="description_task" Type="String" MaxLength="120" FixedLength="false" Unicode="false" />
+          <Property Name="complexity_task" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="tag_task" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="deadline_task" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="is_done" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="users">
+          <Key>
+            <PropertyRef Name="id_user" />
+            <PropertyRef Name="login_user" />
+            <PropertyRef Name="password_user" />
+            <PropertyRef Name="money_count" />
+          </Key>
+          <Property Name="id_user" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="login_user" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="password_user" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="money_count" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="DailyDungeonEntities1" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="habits" EntityType="Self.habits" />
+          <EntitySet Name="tasks" EntityType="Self.tasks" />
+          <EntitySet Name="users" EntityType="Self.users" />
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище DailyDungeonModelContainer" CdmEntityContainer="DailyDungeonEntities1">
+          <EntitySetMapping Name="habits">
+            <EntityTypeMapping TypeName="DailyDungeonModel.habits">
+              <MappingFragment StoreEntitySet="habits">
+                <ScalarProperty Name="id_habit" ColumnName="id_habit" />
+                <ScalarProperty Name="name_habit" ColumnName="name_habit" />
+                <ScalarProperty Name="description_habit" ColumnName="description_habit" />
+                <ScalarProperty Name="complexity_habit" ColumnName="complexity_habit" />
+                <ScalarProperty Name="tag_habit" ColumnName="tag_habit" />
+                <ScalarProperty Name="type_habit" ColumnName="type_habit" />
+                <ScalarProperty Name="is_done" ColumnName="is_done" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tasks">
+            <EntityTypeMapping TypeName="DailyDungeonModel.tasks">
+              <MappingFragment StoreEntitySet="tasks">
+                <ScalarProperty Name="id_task" ColumnName="id_task" />
+                <ScalarProperty Name="name_task" ColumnName="name_task" />
+                <ScalarProperty Name="description_task" ColumnName="description_task" />
+                <ScalarProperty Name="complexity_task" ColumnName="complexity_task" />
+                <ScalarProperty Name="tag_task" ColumnName="tag_task" />
+                <ScalarProperty Name="deadline_task" ColumnName="deadline_task" />
+                <ScalarProperty Name="is_done" ColumnName="is_done" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="users">
+            <EntityTypeMapping TypeName="DailyDungeonModel.users">
+              <MappingFragment StoreEntitySet="users">
+                <ScalarProperty Name="id_user" ColumnName="id_user" />
+                <ScalarProperty Name="login_user" ColumnName="login_user" />
+                <ScalarProperty Name="password_user" ColumnName="password_user" />
+                <ScalarProperty Name="money_count" ColumnName="money_count" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -26,7 +26,7 @@
 
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#dcdcdc"/>
+                    <Setter Property="Foreground" Value="#121518"/>
                     <Setter Property="RenderTransform">
                         <Setter.Value>
                             <ScaleTransform ScaleX="1.1" ScaleY="1.1"/>
@@ -104,10 +104,10 @@
             <Setter Property="Background" Value="#6741d9"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-            <Setter Property="Width" Value="150" />
+            <Setter Property="Width" Value="165" />
             <Setter Property="Height" Value="35" />
             <Setter Property="HorizontalAlignment" Value="Right" />
-            <Setter Property="Margin" Value="0 20 0 0" />
+            <Setter Property="Margin" Value="0 40 0 0" />
             <Setter Property="FontSize" Value="13"/>
             <Setter Property="Grid.Row" Value="1" />
             <Setter Property="Template">
@@ -132,7 +132,7 @@
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="#121518"/>
             <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-            <Setter Property="Width" Value="70" />
+            <Setter Property="Width" Value="100"/>
             <Setter Property="Height" Value="45" />
             <Setter Property="BorderBrush" Value="Transparent"/>
             <Setter Property="FontSize" Value="14"/>
@@ -530,6 +530,7 @@
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="TextAlignment" Value="Center"/>
             <Setter Property="Foreground" Value="White"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
         </Style>
 
         <Style x:Key="normalText" TargetType="TextBlock">
@@ -540,11 +541,13 @@
             <Setter Property="Foreground" Value="White"/>
         </Style>
 
-        <Style x:Key="signUnActiveButton" TargetType="Button">
+        <Style x:Key="registerUnActiveButton" TargetType="Button">
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Width" Value="170"/>
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="#fdfefe"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
             <Setter Property="Template">
                 <Setter.Value>
@@ -558,7 +561,7 @@
 
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#EEE5FF"/>
+                    <Setter Property="Background" Value="#d0bfff"/>
                     <Setter Property="Foreground" Value="#121518"/>
                 </Trigger>
 
@@ -597,9 +600,10 @@
         </Style>
 
         <Style x:Key="inputBorder" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="BorderBrush" Value="#AFA8BA"/>
-            <Setter Property="Margin" Value="70 7"/>
+            <Setter Property="Margin" Value="100 7"/>
             <Setter Property="CornerRadius" Value="5"/>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
@@ -615,8 +619,8 @@
         <Style x:Key="textHint" TargetType="TextBlock">
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Grid.Column" Value="1"/>
-            <Setter Property="Panel.ZIndex" Value="1"/>
             <Setter Property="Margin" Value="10 0 0 0"/>
+            <Setter Property="Panel.ZIndex" Value="1"/>
             <Setter Property="Foreground" Value="#acb0af"/>
         </Style>
 
@@ -631,10 +635,13 @@
 
         <Style x:Key="signActiveButton" TargetType="Button">
             <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Width" Value="200"/>
-            <Setter Property="Margin" Value="0 20 0 0"/>
+            <Setter Property="Width" Value="180"/>
+            <Setter Property="Height" Value="55"/>
+            <Setter Property="Margin" Value="0 40 0 0"/>
             <Setter Property="Background" Value="#7b5cd6"/>
             <Setter Property="Foreground" Value="#fdfefe"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
             <Setter Property="Template">
                 <Setter.Value>
