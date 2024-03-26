@@ -24,7 +24,9 @@ namespace DailyDungeon.Pages
         {
 
             InitializeComponent();
-            
+            this.Deactivated += Window_Deactivated;
+            this.Activated += Window_Activated;
+
             username = "Anastasia";
 
             this.DataContext = this;
@@ -66,20 +68,36 @@ namespace DailyDungeon.Pages
         {
             var habitsWindow = new HabitsWindow(username);
             habitsWindow.Show();
-            this.Hide();
+            this.Close();
         }
 
         private void Logout_Click(object sender, RoutedEventArgs e)
         {
             var loginWindow = new LoginWindow();
             loginWindow.Show();
-            this.Hide();
+            this.Close();
         }
 
         private void Close_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
             Application.Current.Shutdown();
+        }
+
+        private void AddTask_Click(object sender, RoutedEventArgs e)
+        {
+            var addTaskWindow = new AddTaskWindow();
+            addTaskWindow.Show();
+        }
+
+        private void Window_Deactivated(object sender, EventArgs e)
+        {
+            this.IsHitTestVisible = false;
+        }
+
+        private void Window_Activated(object sender, EventArgs e)
+        {
+            this.IsHitTestVisible = true;
         }
     }
 }

@@ -62,14 +62,14 @@ namespace DailyDungeon.Pages
         {
             var tasksWindow = new TasksWindow(username);
             tasksWindow.Show();
-            this.Hide();
+            this.Close();
         }
 
         private void Logout_Click(object sender, RoutedEventArgs e)
         {
             var loginWindow = new LoginWindow();
             loginWindow.Show();
-            this.Hide();
+            this.Close();
         }
 
         private void Close_Click(object sender, RoutedEventArgs e)
