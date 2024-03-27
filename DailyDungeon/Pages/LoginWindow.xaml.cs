@@ -16,9 +16,23 @@ namespace DailyDungeon.Pages
 {
     public partial class LoginWindow : Window
     {
+        public bool IsMaximized { get; set; } = false;
+
         public LoginWindow()
         {
             InitializeComponent();
+            IsMaximized = false;
+        }
+
+        public LoginWindow(bool isMaximized)
+        {
+            InitializeComponent();
+            IsMaximized = isMaximized;
+            if (IsMaximized)
+            {
+                this.WindowState = WindowState.Maximized;
+                IsMaximized = true;
+            }
         }
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
@@ -29,7 +43,6 @@ namespace DailyDungeon.Pages
             }
         }
 
-        private bool IsMaximized = false;
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ClickCount == 2)
@@ -63,7 +76,7 @@ namespace DailyDungeon.Pages
 
         private void Register_Click(object sender, RoutedEventArgs e)
         {
-            var registerWindow = new RegisterWindow();
+            var registerWindow = new RegisterWindow(IsMaximized);
             registerWindow.Show();
             this.Close();
         }
@@ -72,7 +85,7 @@ namespace DailyDungeon.Pages
         {
             if (!string.IsNullOrEmpty(txtEmail.Text) && !string.IsNullOrEmpty(txtPassword.Password))
             {
-                var tasksWindow = new TasksWindow(txtEmail.Text);
+                var tasksWindow = new TasksWindow(txtEmail.Text, IsMaximized);
                 tasksWindow.Show();
                 this.Close();
             }

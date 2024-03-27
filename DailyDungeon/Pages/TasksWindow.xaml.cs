@@ -20,10 +20,18 @@ namespace DailyDungeon.Pages
     public partial class TasksWindow : Window
     {
         public string username {  get; set; }
-        public TasksWindow(string userName)
+        public bool IsMaximized {  get; set; }
+        public TasksWindow(string userName, bool isMaximized)
         {
 
             InitializeComponent();
+            IsMaximized = isMaximized;
+            if (IsMaximized )
+            {
+                this.WindowState = WindowState.Maximized;
+                IsMaximized = true;
+            }
+
             this.Deactivated += Window_Deactivated;
             this.Activated += Window_Activated;
 
@@ -44,7 +52,6 @@ namespace DailyDungeon.Pages
             }
         }
 
-        private bool IsMaximized = false;
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ClickCount == 2)
@@ -66,14 +73,14 @@ namespace DailyDungeon.Pages
 
         private void Habits_Click(object sender, RoutedEventArgs e)
         {
-            var habitsWindow = new HabitsWindow(username);
+            var habitsWindow = new HabitsWindow(username, IsMaximized);
             habitsWindow.Show();
             this.Close();
         }
 
         private void Logout_Click(object sender, RoutedEventArgs e)
         {
-            var loginWindow = new LoginWindow();
+            var loginWindow = new LoginWindow(IsMaximized);
             loginWindow.Show();
             this.Close();
         }

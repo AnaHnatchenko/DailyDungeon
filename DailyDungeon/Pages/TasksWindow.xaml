@@ -24,13 +24,13 @@
                 </Grid.RowDefinitions>
                 
                 <!--Menu Icon-->
-                <!--<TextBlock Text="DailyDungeon" Foreground="#512da8" FontSize="22" FontWeight="Bold" Margin="25 25 0 60" HorizontalAlignment="Left"/> -->
+                <TextBlock Text="DailyDungeon" Grid.Row="0" FontSize="24" FontWeight="Bold" Margin="19 23 0 51" HorizontalAlignment="Left" Foreground="#512da8"/>
 
-                <Border Grid.Row="1" Background="#623ed0">
+                <Border Grid.Row="1" Background="#623ed0" CornerRadius="0 50 0 0">
                     <DockPanel>
                         <!--Menu Logo-->
                         <Border Width="100" Height="100" Padding="3" Background="#512da8" CornerRadius="100"
-                            DockPanel.Dock="Top" HorizontalAlignment="Center" Margin="0 30 0 20">
+                            DockPanel.Dock="Top" HorizontalAlignment="Center" Margin="0 -30 0 20">
                             <Ellipse>
                                 <Ellipse.Fill>
                                     <ImageBrush ImageSource="/Resources/Images/Avatars/Avatar1.jpg"/>
@@ -41,7 +41,7 @@
                         <!--Menu Titles-->
                         <TextBlock x:Name="loginTextBlock"  Text="{Binding Path=username}" Foreground="White" FontSize="24" FontWeight="SemiBold"
                                DockPanel.Dock="Top" TextAlignment="Center" Margin="5 0 0 5" TextWrapping="Wrap"/>
-                        <TextBlock Text="DailyDungeon" Foreground="#d0bfff" FontSize="14" FontWeight="SemiBold"
+                        <TextBlock Text="Gamify your tasks" Foreground="#d0bfff" FontSize="14" FontWeight="SemiBold"
                                 DockPanel.Dock="Top" TextAlignment="Center"/>
 
                         <!--Menu Separator-->

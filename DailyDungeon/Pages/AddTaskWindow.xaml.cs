@@ -16,10 +16,15 @@ namespace DailyDungeon.Pages
 {
     public partial class AddTaskWindow : Window
     {
+        private readonly string[] taskComplexity = {"Легке", "Середнє", "Складне"};
+        private readonly string[] taskTags = { "Робота", "Навчання", "Здоров'я", "Хобі"};
+
         public AddTaskWindow()
         {
             InitializeComponent();
             this.Deactivated += ModalWindow_Deactivated;
+            tagsComboBox.ItemsSource = taskTags;
+            complexityComboBox.ItemsSource = taskComplexity;
         }
 
         private void AddTask_Click(object sender, RoutedEventArgs e)
