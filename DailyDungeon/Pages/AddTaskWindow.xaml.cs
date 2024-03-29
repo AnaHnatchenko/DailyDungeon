@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,6 +26,36 @@ namespace DailyDungeon.Pages
             this.Deactivated += ModalWindow_Deactivated;
             tagsComboBox.ItemsSource = taskTags;
             complexityComboBox.ItemsSource = taskComplexity;
+        }
+
+        public class SelectedItemExistsConverter : IValueConverter
+        {
+            public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+            {
+                return value != null;
+            }
+
+            public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public class SelectedDateExistsConverter : IValueConverter
+        {
+            public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+            {
+                if (value is DateTime selectedDate)
+                {
+                    return selectedDate != DateTime.MinValue;
+                }
+                return false;
+            }
+
+            public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+            {
+                throw new NotImplementedException();
+            }
         }
 
         private void AddTask_Click(object sender, RoutedEventArgs e)
