@@ -79,8 +79,8 @@ namespace DailyDungeon.Pages
         {
             if (!string.IsNullOrEmpty(txtEmail.Text) && !string.IsNullOrEmpty(txtPassword.Password))
             {
-                var tasksWindow = new TasksWindow(txtEmail.Text, IsMaximized);
-                tasksWindow.Show();
+                var loginWindow = new LoginWindow(IsMaximized);
+                loginWindow.Show();
                 this.Close();
             }
         }

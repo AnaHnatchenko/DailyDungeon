@@ -113,7 +113,7 @@
             </Setter>
         </Style>
 
-        <Style x:Key="addButton" TargetType="Button">
+        <Style x:Key="createButton" TargetType="Button">
             <Setter Property="Background" Value="#6741d9"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
@@ -727,11 +727,9 @@
 
         <!--#endregion-->
 
-        <!--#region AddTaskWindow Style-->
+        <!--#region AddTaskWindow & AddHabitWindow Style-->
 
-        
-        
-        <Style x:Key="addTaskButton" TargetType="Button">
+        <Style x:Key="addButton" TargetType="Button">
             <Setter Property="IsEnabled" Value="True"/>
             <Setter Property="Background" Value="#6741d9"/>
             <Setter Property="Foreground" Value="White"/>
@@ -763,11 +761,6 @@
                     <Setter Property="Background" Value="#d0bfff"/>
                     <Setter Property="Foreground" Value="White"/>
                 </DataTrigger>
-                <DataTrigger Binding="{Binding SelectedDate, ElementName=deadlineDatePicker}" Value="{x:Null}">
-                    <Setter Property="IsEnabled" Value="False"/>
-                    <Setter Property="Background" Value="#d0bfff"/>
-                    <Setter Property="Foreground" Value="White"/>
-                </DataTrigger>
                 <MultiDataTrigger>
                     <MultiDataTrigger.Conditions>
                         <Condition Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsEnabled}" Value="True"/>
@@ -776,6 +769,26 @@
                     <Setter Property="Background" Value="#7b5cd6"/>
                     <Setter Property="Foreground" Value="White"/>
                 </MultiDataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="addTaskButton" TargetType="Button" BasedOn="{StaticResource addButton}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding SelectedDate, ElementName=deadlineDatePicker}" Value="{x:Null}">
+                    <Setter Property="IsEnabled" Value="False"/>
+                    <Setter Property="Background" Value="#d0bfff"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="addHabitButton" TargetType="Button" BasedOn="{StaticResource addButton}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding SelectedItem, ElementName=typeComboBox}" Value="{x:Null}">
+                    <Setter Property="IsEnabled" Value="False"/>
+                    <Setter Property="Background" Value="#d0bfff"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </DataTrigger>
             </Style.Triggers>
         </Style>
 
@@ -809,7 +822,7 @@
             </Style.Triggers>
         </Style>
 
-        <Style x:Key="taskTextBox" TargetType="TextBox">
+        <Style x:Key="infoTextBox" TargetType="TextBox">
             <Setter Property="Width" Value="368"/>
             <Setter Property="Foreground" Value="#121518"/>
             <Setter Property="Padding" Value="4"/>
@@ -1286,7 +1299,7 @@
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <Button x:Name="PART_Button" Grid.Column="0" Foreground="{TemplateBinding Foreground}" Focusable="False" HorizontalAlignment="Left" Margin="4,2,4,3" Grid.Row="0" Template="{StaticResource DropDownButtonTemplate}" VerticalAlignment="Center" Width="auto" />
-                                <DatePickerTextBox x:Name="PART_TextBox" Grid.Column="1" Focusable="{TemplateBinding Focusable}" Foreground="#121518" VerticalAlignment="Center" Background="#eff2f7" Height="26" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Padding="4 0 4 0" Text="Оберіть дату" SelectionBrush="#70512da8"/>
+                                <DatePickerTextBox x:Name="PART_TextBox" Grid.Column="1" Focusable="{TemplateBinding Focusable}" Foreground="{TemplateBinding Foreground}" VerticalAlignment="Center" Background="#eff2f7" Height="26" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Padding="4 0 4 0" Text="Оберіть дату" SelectionBrush="#70512da8"/>
                                 <Grid x:Name="PART_DisabledVisual" Grid.Column="0" Grid.ColumnSpan="2" IsHitTestVisible="False" Opacity="0" Grid.Row="0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
@@ -1300,6 +1313,9 @@
                         </Border>
                         
                         <ControlTemplate.Triggers>
+                            <Trigger Property="SelectedDate" Value="{x:Null}">
+                                <Setter Property="Foreground" Value="#b0b9c6"/>
+                            </Trigger>
                             <DataTrigger Binding="{Binding Source={x:Static SystemParameters.HighContrast}}" Value="false">
                                 <Setter Property="Foreground" TargetName="PART_TextBox" Value="{Binding Foreground, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
                             </DataTrigger>

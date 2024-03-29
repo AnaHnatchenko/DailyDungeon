@@ -99,6 +99,9 @@
     <Compile Include="habits.cs">
       <DependentUpon>DataBaseModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Pages\AddHabitWindow.xaml.cs">
+      <DependentUpon>AddHabitWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\AddTaskWindow.xaml.cs">
       <DependentUpon>AddTaskWindow.xaml</DependentUpon>
     </Compile>
@@ -177,6 +180,10 @@
     <Resource Include="Resources\Images\Icons\image1.png" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Pages\AddHabitWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\AddTaskWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

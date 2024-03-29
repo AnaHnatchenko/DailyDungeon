@@ -119,7 +119,7 @@
                        HorizontalAlignment="Left" Foreground="#623ed0"/>
 
                 <!--Add Button-->
-                <Button Grid.Row="1" Style="{StaticResource addButton}" Click="AddTask_Click">
+                <Button Grid.Row="1" Style="{StaticResource createButton}" Click="AddTask_Click">
                     <StackPanel Orientation="Horizontal">
                         <Icon:PackIconMaterial Kind="Plus" VerticalAlignment="Center" Width="11" Height="11" Margin="0 1 8 0"/>
                         <TextBlock Text="Створити завдання" FontWeight="SemiBold"/>

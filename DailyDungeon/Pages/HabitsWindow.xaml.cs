@@ -29,6 +29,9 @@ namespace DailyDungeon.Pages
                 IsMaximized = true;
             }
 
+            this.Deactivated += Window_Deactivated;
+            this.Activated += Window_Activated;
+
             username = "Anastasia";
 
             this.DataContext = this;
@@ -83,6 +86,22 @@ namespace DailyDungeon.Pages
         {
             this.Close();
             Application.Current.Shutdown();
+        }
+
+        private void AddHabit_Click(object sender, RoutedEventArgs e)
+        {
+            var addHabitWindow = new AddHabitWindow();
+            addHabitWindow.Show();
+        }
+
+        private void Window_Deactivated(object sender, EventArgs e)
+        {
+            this.IsHitTestVisible = false;
+        }
+
+        private void Window_Activated(object sender, EventArgs e)
+        {
+            this.IsHitTestVisible = true;
         }
     }
 }

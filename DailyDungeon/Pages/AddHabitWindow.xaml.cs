@@ -15,17 +15,19 @@ using System.Windows.Shapes;
 
 namespace DailyDungeon.Pages
 {
-    public partial class AddTaskWindow : Window
+    public partial class AddHabitWindow : Window
     {
-        private readonly string[] taskComplexity = {"Легко", "Середньо", "Складно"};
-        private readonly string[] taskTags = { "Робота", "Навчання", "Здоров'я", "Хобі"};
+        private readonly string[] habitComplexity = { "Легко", "Середньо", "Складно" };
+        private readonly string[] habitType = { "Позитивна", "Нейтральна", "Негативна" };
+        private readonly string[] habitTags = { "Робота", "Навчання", "Здоров'я", "Хобі" };
 
-        public AddTaskWindow()
+        public AddHabitWindow()
         {
             InitializeComponent();
             this.Deactivated += ModalWindow_Deactivated;
-            tagsComboBox.ItemsSource = taskTags;
-            complexityComboBox.ItemsSource = taskComplexity;
+            complexityComboBox.ItemsSource = habitComplexity;
+            typeComboBox.ItemsSource = habitType;
+            tagsComboBox.ItemsSource = habitTags;
         }
 
         public class SelectedItemExistsConverter : IValueConverter
@@ -41,24 +43,7 @@ namespace DailyDungeon.Pages
             }
         }
 
-        public class SelectedDateExistsConverter : IValueConverter
-        {
-            public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-            {
-                if (value is DateTime selectedDate)
-                {
-                    return selectedDate != DateTime.MinValue;
-                }
-                return false;
-            }
-
-            public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        private void AddTask_Click(object sender, RoutedEventArgs e)
+        private void AddHabit_Click(object sender, RoutedEventArgs e)
         {
             this.Hide();
         }
