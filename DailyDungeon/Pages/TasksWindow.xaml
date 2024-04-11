@@ -94,7 +94,6 @@
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
@@ -152,7 +151,7 @@
 
                     <DataGrid.Columns>
                         <DataGridCheckBoxColumn CanUserResize="False" Width="Auto" ElementStyle="{StaticResource CheckBoxStyle1}"/>
-                        <DataGridTextColumn x:Name="Name" Header="Назва" IsReadOnly="True" Width="*" Binding="{Binding name_task}"/>
+                        <DataGridTextColumn Header="Назва" IsReadOnly="True" Width="*" Binding="{Binding name_task}"/>
                         <DataGridTextColumn Header="Опис" IsReadOnly="True" Width="*" Binding="{Binding description_task}"/>
                         <DataGridTextColumn Header="Складність" IsReadOnly="True" Width="*" Binding="{Binding complexity_task}"/>
                         <DataGridTextColumn Header="Дедлайн" IsReadOnly="True" Width="*" Binding="{Binding deadline_task}"/>

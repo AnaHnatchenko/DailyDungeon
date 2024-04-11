@@ -21,7 +21,9 @@ namespace DailyDungeon.Pages
         public ShopWindow(string userName, bool isMaximized)
         {
             InitializeComponent();
-            
+            AddShopBackgroundObjects(shopBackgrounds, 100);
+            AddShopAvatarObjects(shopAvatars, 16);
+
             IsMaximized = isMaximized;
             if (IsMaximized)
             {
@@ -104,6 +106,98 @@ namespace DailyDungeon.Pages
         private void Window_Activated(object sender, EventArgs e)
         {
             this.IsHitTestVisible = true;
+        }
+
+        private void AddShopBackgroundObjects(WrapPanel panel, int count)
+        {
+            Random random = new Random();
+
+            for (int i = 0; i <= count; i++)
+            {
+                Border border = new Border();
+                border.Style = (Style)Application.Current.FindResource("objectBorder");
+
+                Rectangle rectangle = new Rectangle();
+                rectangle.Style = (Style)Application.Current.FindResource("objectImage");
+                rectangle.Fill = new SolidColorBrush(Color.FromRgb((byte)random.Next(256), (byte)random.Next(256), (byte)random.Next(256)));
+
+                Border innerBorder = new Border();
+                innerBorder.Style = (Style)Application.Current.FindResource("shopObjectInnerBorder");
+
+                Image image = new Image();
+                image.Style = (Style)Application.Current.FindResource("coinImage");
+
+                TextBlock textBlock = new TextBlock();
+                textBlock.Style = (Style)Application.Current.FindResource("priceTextBlock");
+
+                StackPanel stackPanel = new StackPanel();
+                stackPanel.Style = (Style)Application.Current.FindResource("shopObjectStackPanel");
+
+                stackPanel.Children.Add(image);
+                stackPanel.Children.Add(textBlock);
+                innerBorder.Child = stackPanel;
+
+                Grid.SetRow(rectangle, 0);
+                Grid.SetRow(innerBorder, 1);
+
+                Grid grid = new Grid();
+
+                grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Auto) });
+                grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Auto) });
+
+                grid.Children.Add(rectangle);
+                grid.Children.Add(innerBorder);
+
+                border.Child = grid;
+                panel.Children.Add(border);
+            }
+        }
+
+        private void AddShopAvatarObjects(WrapPanel panel, int count)
+        {
+            for (int i = 3; i < count; i++)
+            {
+                Border border = new Border();
+                border.Style = (Style)Application.Current.FindResource("objectBorder");
+
+                Rectangle rectangle = new Rectangle();
+                rectangle.Style = (Style)Application.Current.FindResource("shopObjectImageAvatar");
+
+
+                string imagePath = $"D:/SUTE/ООП/Курсова/DailyDungeon/DailyDungeon/Resources/Images/Avatars/Avatar{i}.jpg";
+                ImageSource imageSource = new BitmapImage(new Uri(imagePath, UriKind.Relative));
+                rectangle.Fill = new ImageBrush(imageSource); ;
+
+                Border innerBorder = new Border();
+                innerBorder.Style = (Style)Application.Current.FindResource("shopObjectInnerBorder");
+
+                Image image = new Image();
+                image.Style = (Style)Application.Current.FindResource("coinImage");
+
+                TextBlock textBlock = new TextBlock();
+                textBlock.Style = (Style)Application.Current.FindResource("priceTextBlock");
+
+                StackPanel stackPanel = new StackPanel();
+                stackPanel.Style = (Style)Application.Current.FindResource("shopObjectStackPanel");
+
+                stackPanel.Children.Add(image);
+                stackPanel.Children.Add(textBlock);
+                innerBorder.Child = stackPanel;
+
+                Grid.SetRow(rectangle, 0);
+                Grid.SetRow(innerBorder, 1);
+
+                Grid grid = new Grid();
+
+                grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Auto) });
+                grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Auto) });
+
+                grid.Children.Add(rectangle);
+                grid.Children.Add(innerBorder);
+
+                border.Child = grid;
+                panel.Children.Add(border);
+            }
         }
     }
 }

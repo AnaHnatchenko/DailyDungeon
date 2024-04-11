@@ -187,6 +187,21 @@
       <DependentUpon>DataBaseModel.edmx</DependentUpon>
       <LastGenOutput>DataBaseModel.cs</LastGenOutput>
     </Content>
+    <Resource Include="Resources\Images\Avatars\Avatar10.jpg" />
+    <Resource Include="Resources\Images\Avatars\Avatar11.jpg" />
+    <Resource Include="Resources\Images\Avatars\Avatar12.jpg" />
+    <Resource Include="Resources\Images\Avatars\Avatar13.jpg" />
+    <Resource Include="Resources\Images\Avatars\Avatar14.jpg" />
+    <Resource Include="Resources\Images\Avatars\Avatar15.jpg" />
+    <Resource Include="Resources\Images\Avatars\Avatar16.jpg" />
+    <Resource Include="Resources\Images\Avatars\Avatar2.jpg" />
+    <Resource Include="Resources\Images\Avatars\Avatar3.jpg" />
+    <Resource Include="Resources\Images\Avatars\Avatar4.jpg" />
+    <Resource Include="Resources\Images\Avatars\Avatar5.jpg" />
+    <Resource Include="Resources\Images\Avatars\Avatar6.jpg" />
+    <Resource Include="Resources\Images\Avatars\Avatar7.jpg" />
+    <Resource Include="Resources\Images\Avatars\Avatar8.jpg" />
+    <Resource Include="Resources\Images\Avatars\Avatar9.jpg" />
     <Resource Include="exelogo.ico" />
     <Resource Include="Resources\Images\Icons\logo.png" />
     <Resource Include="Resources\Images\Icons\image1.png" />

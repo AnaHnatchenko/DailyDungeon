@@ -92,9 +92,6 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
@@ -118,14 +115,27 @@
                 <TextBlock Text="Інвентар" Grid.Row="1" FontSize="32" FontWeight="SemiBold" Margin="0 40 0 0"
                HorizontalAlignment="Left" Foreground="#623ed0"/>
 
-                <!--Separator-->
-                <Separator Height="1" Grid.Row="3" Background="#dae2ea" Margin="0 -1 0 10"/>
-
-                <!--Tab Buttons-->
-                <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0 10 0 0">
-                    <Button Content="Фони" Style="{StaticResource tabButton}" BorderBrush="#784ff2"/>
-                    <Button Content="Аватари" Style="{StaticResource tabButton}"/>
-                </StackPanel>
+                <!--Inventory Object List-->
+                <TabControl Style="{DynamicResource TabControlStyle1}" Grid.Row="2" Margin="0 10 0 0">
+                    <TabItem Style="{DynamicResource TabItemStyle1}" Header="Фони">
+                        <ScrollViewer Style="{DynamicResource ScrollViewerStyle1}" VerticalScrollBarVisibility="Auto">
+                            <WrapPanel x:Name="shopBackgrounds" Orientation="Horizontal">
+                                <Border Style="{StaticResource objectBorder}">
+                                    <Rectangle Style="{StaticResource objectImage}"/>
+                                </Border>
+                            </WrapPanel>
+                        </ScrollViewer>
+                    </TabItem>
+                    <TabItem Style="{DynamicResource TabItemStyle1}" Header="Аватари">
+                        <ScrollViewer Style="{DynamicResource ScrollViewerStyle1}" VerticalScrollBarVisibility="Auto">
+                            <WrapPanel x:Name="shopAvatars"  Orientation="Horizontal">
+                                <Border Style="{StaticResource objectBorder}">
+                                    <Rectangle Style="{StaticResource inventoryObjectImageAvatar}"/>
+                                </Border>
+                            </WrapPanel>
+                        </ScrollViewer>
+                    </TabItem>
+                </TabControl>
             </Grid>
         </Grid>
     </Border>
