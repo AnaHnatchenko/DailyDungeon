@@ -78,6 +78,20 @@ namespace DailyDungeon.Pages
             this.Close();
         }
 
+        private void Inventory_Click(object sender, RoutedEventArgs e)
+        {
+            var inventoryWindow = new InventoryWindow(username, IsMaximized);
+            inventoryWindow.Show();
+            this.Close();
+        }
+
+        private void Shop_Click(object sender, RoutedEventArgs e)
+        {
+            var shopWindow = new ShopWindow(username, IsMaximized);
+            shopWindow.Show();
+            this.Close();
+        }
+
         private void Logout_Click(object sender, RoutedEventArgs e)
         {
             var loginWindow = new LoginWindow(IsMaximized);
@@ -95,6 +109,20 @@ namespace DailyDungeon.Pages
         {
             var addTaskWindow = new AddTaskWindow();
             addTaskWindow.Show();
+        }
+
+        private void EditTask_Click(object sender, RoutedEventArgs e)
+        {
+            tasks selectedTask = (tasks) tasksDataGrid.SelectedItem;
+
+            string name = selectedTask.name_task;
+            string description = selectedTask.description_task;
+            string complexity = selectedTask.complexity_task;
+            string tag = selectedTask.tag_task;
+            DateTime deadline = DateTime.Parse(selectedTask.deadline_task);
+
+            var editTaskWindow = new EditTaskWindow(name, description, complexity, tag, deadline);
+            editTaskWindow.Show();
         }
 
         private void Window_Deactivated(object sender, EventArgs e)

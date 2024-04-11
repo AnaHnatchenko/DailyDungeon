@@ -62,7 +62,7 @@
                 </StackPanel>
             </StackPanel>
 
-            <Button Grid.Row="2" Content="Створити" Style="{StaticResource addTaskButton}" Click="AddTask_Click"/>
+            <Button Grid.Row="2" Content="Створити" Style="{StaticResource addOrEditTaskButton}" Click="AddTask_Click"/>
         </Grid>
     </Border>
 </Window>

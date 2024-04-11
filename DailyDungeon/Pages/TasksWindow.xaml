@@ -41,7 +41,7 @@
                         <!--Menu Titles-->
                         <TextBlock x:Name="loginTextBlock"  Text="{Binding Path=username}" Foreground="White" FontSize="24" FontWeight="SemiBold"
                                DockPanel.Dock="Top" TextAlignment="Center" Margin="5 0 0 5" TextWrapping="Wrap"/>
-                        <TextBlock Text="Gamify your tasks" Foreground="#d0bfff" FontSize="14" FontWeight="SemiBold"
+                        <TextBlock Text="Gamify your life" Foreground="#d0bfff" FontSize="14" FontWeight="SemiBold"
                                 DockPanel.Dock="Top" TextAlignment="Center"/>
 
                         <!--Menu Separator-->
@@ -63,14 +63,14 @@
                                 </StackPanel>
                             </Button>
 
-                            <Button Style="{StaticResource menuButton}">
+                            <Button Style="{StaticResource menuButton}" Click="Inventory_Click">
                                 <StackPanel Orientation="Horizontal">
                                     <Icon:PackIconMaterial Kind="PackageVariant" Style="{StaticResource menuButtonIcon}"/>
                                     <TextBlock Text="Інвентар"/>
                                 </StackPanel>
                             </Button>
 
-                            <Button Style="{StaticResource menuButton}">
+                            <Button Style="{StaticResource menuButton}" Click="Shop_Click">
                                 <StackPanel Orientation="Horizontal">
                                     <Icon:PackIconMaterial Kind="CashMultiple" Style="{StaticResource menuButtonIcon}"/>
                                     <TextBlock Text="Крамниця"/>
@@ -146,13 +146,13 @@
                     <TextBox x:Name="txtFilter" Style="{StaticResource textboxFilter}"/>
                 </Grid>
 
-                <!--Members Datagrid-->
+                <!--Tasks Datagrid-->
                 <DataGrid Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" RowStyle="{DynamicResource DataGridRowStyle1}"
                       Grid.Row="4" x:Name="tasksDataGrid">
 
                     <DataGrid.Columns>
                         <DataGridCheckBoxColumn CanUserResize="False" Width="Auto" ElementStyle="{StaticResource CheckBoxStyle1}"/>
-                        <DataGridTextColumn Header="Назва" IsReadOnly="True" Width="*" Binding="{Binding name_task}"/>
+                        <DataGridTextColumn x:Name="Name" Header="Назва" IsReadOnly="True" Width="*" Binding="{Binding name_task}"/>
                         <DataGridTextColumn Header="Опис" IsReadOnly="True" Width="*" Binding="{Binding description_task}"/>
                         <DataGridTextColumn Header="Складність" IsReadOnly="True" Width="*" Binding="{Binding complexity_task}"/>
                         <DataGridTextColumn Header="Дедлайн" IsReadOnly="True" Width="*" Binding="{Binding deadline_task}"/>
@@ -162,7 +162,7 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
-                                        <Button Style="{StaticResource gridEditButton}">
+                                        <Button Style="{StaticResource gridEditButton}" Click="EditTask_Click">
                                             <Icon:PackIconMaterial Kind="PencilOutline" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
                                         <Button Style="{StaticResource gridRemoveButton}" Margin="5 0 0 0">

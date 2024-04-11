@@ -14,14 +14,14 @@ using System.Windows.Shapes;
 
 namespace DailyDungeon.Pages
 {
-    public partial class HabitsWindow : Window
+    public partial class InventoryWindow : Window
     {
         public string username { get; set; }
         public bool IsMaximized { get; set; }
-
-        public HabitsWindow(string userName, bool isMaximized)
+        public InventoryWindow(string userName, bool isMaximized)
         {
             InitializeComponent();
+
             IsMaximized = isMaximized;
             if (IsMaximized)
             {
@@ -33,12 +33,6 @@ namespace DailyDungeon.Pages
             this.Activated += Window_Activated;
 
             username = "Anastasia";
-
-            this.DataContext = this;
-
-            string query = $"select * from {username}_habits";
-
-            tasksDataGrid.ItemsSource = DailyDungeonEntities.GetContext().Database.SqlQuery<habits>(query).ToList();
         }
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
@@ -75,13 +69,12 @@ namespace DailyDungeon.Pages
             this.Close();
         }
 
-        private void Inventory_Click(object sender, RoutedEventArgs e)
+        private void Habits_Click(object sender, RoutedEventArgs e)
         {
-            var inventoryWindow = new InventoryWindow(username, IsMaximized);
-            inventoryWindow.Show();
+            var habitsWindow = new HabitsWindow(username, IsMaximized);
+            habitsWindow.Show();
             this.Close();
         }
-
         private void Shop_Click(object sender, RoutedEventArgs e)
         {
             var shopWindow = new ShopWindow(username, IsMaximized);
@@ -100,26 +93,6 @@ namespace DailyDungeon.Pages
         {
             this.Close();
             Application.Current.Shutdown();
-        }
-
-        private void AddHabit_Click(object sender, RoutedEventArgs e)
-        {
-            var addHabitWindow = new AddHabitWindow();
-            addHabitWindow.Show();
-        }
-
-        private void EditHabit_Click(object sender, RoutedEventArgs e)
-        {
-            habits selectedTask = (habits)tasksDataGrid.SelectedItem;
-
-            string name = selectedTask.name_habit;
-            string description = selectedTask.description_habit;
-            string complexity = selectedTask.complexity_habit;
-            string type = selectedTask.type_habit;
-            string tag = selectedTask.tag_habit;
-
-            var editHabitWindow = new EditHabitWindow(name, description, complexity, type, tag);
-            editHabitWindow.Show();
         }
 
         private void Window_Deactivated(object sender, EventArgs e)

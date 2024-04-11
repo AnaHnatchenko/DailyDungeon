@@ -727,9 +727,9 @@
 
         <!--#endregion-->
 
-        <!--#region AddTaskWindow & AddHabitWindow Style-->
+        <!--#region Add/EditTaskWindow & Add/EditHabitWindow Style-->
 
-        <Style x:Key="addButton" TargetType="Button">
+        <Style x:Key="mainButton" TargetType="Button">
             <Setter Property="IsEnabled" Value="True"/>
             <Setter Property="Background" Value="#6741d9"/>
             <Setter Property="Foreground" Value="White"/>
@@ -772,7 +772,7 @@
             </Style.Triggers>
         </Style>
 
-        <Style x:Key="addTaskButton" TargetType="Button" BasedOn="{StaticResource addButton}">
+        <Style x:Key="addOrEditTaskButton" TargetType="Button" BasedOn="{StaticResource mainButton}">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding SelectedDate, ElementName=deadlineDatePicker}" Value="{x:Null}">
                     <Setter Property="IsEnabled" Value="False"/>
@@ -782,7 +782,7 @@
             </Style.Triggers>
         </Style>
 
-        <Style x:Key="addHabitButton" TargetType="Button" BasedOn="{StaticResource addButton}">
+        <Style x:Key="addOrEditHabitButton" TargetType="Button" BasedOn="{StaticResource mainButton}">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding SelectedItem, ElementName=typeComboBox}" Value="{x:Null}">
                     <Setter Property="IsEnabled" Value="False"/>
@@ -1299,7 +1299,7 @@
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <Button x:Name="PART_Button" Grid.Column="0" Foreground="{TemplateBinding Foreground}" Focusable="False" HorizontalAlignment="Left" Margin="4,2,4,3" Grid.Row="0" Template="{StaticResource DropDownButtonTemplate}" VerticalAlignment="Center" Width="auto" />
-                                <DatePickerTextBox x:Name="PART_TextBox" Grid.Column="1" Focusable="{TemplateBinding Focusable}" Foreground="{TemplateBinding Foreground}" VerticalAlignment="Center" Background="#eff2f7" Height="26" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Padding="4 0 4 0" Text="Оберіть дату" SelectionBrush="#70512da8"/>
+                                <DatePickerTextBox x:Name="PART_TextBox" Grid.Column="1" Focusable="{TemplateBinding Focusable}" Foreground="{TemplateBinding Foreground}" VerticalAlignment="Center" Background="#eff2f7" Height="26" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Padding="4 0 4 0" Text="Оберіть дату" SelectionBrush="#70512da8" IsReadOnly="True"/>
                                 <Grid x:Name="PART_DisabledVisual" Grid.Column="0" Grid.ColumnSpan="2" IsHitTestVisible="False" Opacity="0" Grid.Row="0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
