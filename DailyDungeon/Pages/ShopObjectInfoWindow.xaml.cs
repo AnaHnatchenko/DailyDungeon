@@ -44,7 +44,7 @@ namespace DailyDungeon.Pages
             }
         }
 
-        public ShopObjectInfoWindow(string userName, BitmapImage image)
+        public ShopObjectInfoWindow(string userName, ImageSource image)
         {
             InitializeComponent();
             objectImage.Fill = new ImageBrush(image);

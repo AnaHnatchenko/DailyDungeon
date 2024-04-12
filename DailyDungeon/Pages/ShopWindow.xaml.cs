@@ -17,10 +17,11 @@ namespace DailyDungeon.Pages
     public partial class ShopWindow : Window
     {
         public string username { get; set; }
+        public int moneyCount { get; set; }
         public bool IsMaximized { get; set; }
 
-        public Color backgroundColor = Color.FromRgb(0x62, 0x3E, 0xD0);
-        public ImageSource avatarImage = new BitmapImage(new Uri("D:/SUTE/ООП/Курсова/DailyDungeon/DailyDungeon/Resources/Images/Avatars/Avatar1.jpg", UriKind.Relative));
+        public Color backgroundColor { get; set; } = Color.FromRgb(0x62, 0x3E, 0xD0);
+        public ImageSource avatarImage { get; set; } = new BitmapImage(new Uri("D:/SUTE/ООП/Курсова/DailyDungeon/DailyDungeon/Resources/Images/Avatars/Avatar1.jpg", UriKind.Relative));
 
         public ShopWindow(string userName, bool isMaximized, Color Background, ImageSource Avatar)
         {
@@ -39,6 +40,19 @@ namespace DailyDungeon.Pages
             this.Activated += Window_Activated;
 
             username = "Anastasia";
+            using (var context = new DailyDungeonEntities())
+            {
+                var user = context.users.FirstOrDefault(u => u.login_user == username);
+                if (user != null)
+                {
+                    moneyCount = user.money_count;
+                }
+                else
+                {
+                    moneyCount = 0;
+                }
+            }
+            moneyCountText.Text = $"{moneyCount}";
 
             backgroundColor = Background;
             avatarImage = Avatar;
@@ -224,9 +238,9 @@ namespace DailyDungeon.Pages
                     var shopObjectInfoWindow = new ShopObjectInfoWindow(username, color);
                     shopObjectInfoWindow.ShowDialog();
                 }
-                if (rectangle.Fill is ImageBrush imageBrush && imageBrush.ImageSource is BitmapImage image)
+                else
                 {
-                    var shopObjectInfoWindow = new ShopObjectInfoWindow(username, image);
+                    var shopObjectInfoWindow = new ShopObjectInfoWindow(username, ((ImageBrush)rectangle.Fill).ImageSource);
                     shopObjectInfoWindow.ShowDialog();
                 }
             }
