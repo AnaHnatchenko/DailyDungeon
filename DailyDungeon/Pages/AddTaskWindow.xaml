@@ -32,7 +32,7 @@
                             <TextBlock Margin="8 4" Foreground="#b0b9c6" VerticalAlignment="Top" HorizontalAlignment="Left"
                                        IsHitTestVisible="False" Panel.ZIndex="1" Text="Додати назву" FontSize="12"
                                 Visibility="{Binding ElementName=txtName, Path=Text.IsEmpty, Converter={StaticResource BoolToVis}}"/>
-                            <TextBox x:Name="txtName" Style="{StaticResource infoTextBox}"/>
+                            <TextBox x:Name="txtName" Style="{StaticResource infoTextBox}" Height="26" Text="{Binding name_task}" MaxLength="50"/>
                         </Grid>
                     </StackPanel>
                     <StackPanel Orientation="Vertical">
@@ -41,7 +41,7 @@
                             <TextBlock Margin="8 4" Foreground="#b0b9c6" VerticalAlignment="Top" HorizontalAlignment="Left"
                                     IsHitTestVisible="False" Panel.ZIndex="1" Text="Додати опис" FontSize="12"
                                     Visibility="{Binding ElementName=txtDescription, Path=Text.IsEmpty, Converter={StaticResource BoolToVis}}"/>
-                            <TextBox x:Name="txtDescription" Style="{StaticResource infoTextBox}" Height="100"/>
+                            <TextBox x:Name="txtDescription" Style="{StaticResource infoTextBox}" Height="100" Text="{Binding description_task}" MaxLength="300"/>
                         </Grid>
                     </StackPanel>
                 </StackPanel>
@@ -50,15 +50,15 @@
             <StackPanel Grid.Row="1" Orientation="Vertical">
                 <StackPanel Orientation="Vertical" Margin="16 8 16 4">
                     <TextBlock Text="Складність" FontSize="14" FontWeight="SemiBold" Foreground="#623ed0" Margin="0 0 0 2"/>
-                    <ComboBox x:Name="complexityComboBox" Style="{StaticResource {x:Type ComboBox}}"/>
+                    <ComboBox x:Name="complexityComboBox" Style="{StaticResource {x:Type ComboBox}}" SelectedItem="{Binding complexity_task}"/>
                 </StackPanel>
                 <StackPanel Orientation="Vertical" Margin="16 4 16 8">
                     <TextBlock Text="Теги" FontSize="14" FontWeight="SemiBold" Foreground="#623ed0" Margin="0 0 0 2"/>
-                    <ComboBox x:Name="tagsComboBox" Style="{StaticResource {x:Type ComboBox}}" IsEditable="True"/>
+                    <ComboBox x:Name="tagsComboBox" Style="{StaticResource {x:Type ComboBox}}" IsEditable="True" SelectedItem="{Binding tag_task}"/>
                 </StackPanel>
                 <StackPanel Orientation="Vertical" Margin="16 4 16 8">
                     <TextBlock Text="Дедлайн" FontSize="14" FontWeight="SemiBold" Foreground="#623ed0" Margin="0 0 0 2"/>
-                    <DatePicker x:Name="deadlineDatePicker" CalendarStyle="{DynamicResource DatePickerCalendarStyle1}" Style="{DynamicResource DatePickerStyle1}" DisplayDateStart="{x:Static sys:DateTime.Now}"/>
+                    <DatePicker x:Name="deadlineDatePicker" CalendarStyle="{DynamicResource DatePickerCalendarStyle1}" Style="{DynamicResource DatePickerStyle1}" DisplayDateStart="{x:Static sys:DateTime.Now}" SelectedDate="{Binding deadline_task}"/>
                 </StackPanel>
             </StackPanel>
 

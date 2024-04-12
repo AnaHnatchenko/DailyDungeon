@@ -17,34 +17,25 @@ namespace DailyDungeon.Pages
 {
     public partial class EditHabitWindow : Window
     {
-        public string name { get; set; }
-        public string description { get; set; }
-        public string complexity { get; set; }
-        public string type { get; set; }
-        public string tag { get; set; }
+        public string username { get; set; }
 
         private readonly string[] habitComplexity = { "Легко", "Середньо", "Складно" };
         private readonly string[] habitType = { "Позитивна", "Нейтральна", "Негативна" };
         private readonly string[] habitTags = { "Робота", "Навчання", "Здоров'я", "Хобі" };
 
-        public EditHabitWindow(string Name, string Description, string Complexity, string Type, string Tag)
+        private habits habit = new habits();
+
+        public EditHabitWindow(string userName, habits selectedHabit)
         {
             InitializeComponent();
+            username = userName;
+
             complexityComboBox.ItemsSource = habitComplexity;
             typeComboBox.ItemsSource = habitType;
             tagsComboBox.ItemsSource = habitTags;
 
-            name = Name;
-            description = Description;
-            complexity = Complexity;
-            type = Type;
-            tag = Tag;
-
-            txtName.Text = name;
-            txtDescription.Text = description;
-            complexityComboBox.SelectedItem = complexity;
-            typeComboBox.SelectedItem = type;
-            tagsComboBox.SelectedItem = tag;
+            habit = selectedHabit;
+            DataContext = habit;
         }
 
         public class SelectedItemExistsConverter : IValueConverter
@@ -62,6 +53,21 @@ namespace DailyDungeon.Pages
 
         private void EditHabit_Click(object sender, RoutedEventArgs e)
         {
+            habit.name_habit = habit.name_habit.Trim();
+            habit.description_habit = habit.description_habit.Trim();
+            if (string.IsNullOrWhiteSpace(habit.tag_habit)) habit.tag_habit = "";
+            string query = $"update {username}_habits set name_habit = '{habit.name_habit}', description_habit = '{habit.description_habit}', complexity_habit = '{habit.complexity_habit}', " +
+                $"tag_habit = '{habit.tag_habit}', type_habit = '{habit.type_habit}' where id_habit = '{habit.id_habit}'";
+            try
+            {
+                DailyDungeonEntities.GetContext().Database.ExecuteSqlCommand(query);
+                DailyDungeonEntities.GetContext().SaveChanges();
+                MessageBox.Show($"Звичку успішно відредаговано!");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message.ToString());
+            }
             this.Hide();
         }
 

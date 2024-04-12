@@ -39,6 +39,7 @@ namespace DailyDungeon.Pages
             this.Activated += Window_Activated;
 
             username = "Anastasia";
+            userTextBlock.Text = username;
             using (var context = new DailyDungeonEntities())
             {
                 var user = context.users.FirstOrDefault(u => u.login_user == username);

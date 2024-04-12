@@ -23,6 +23,8 @@ namespace DailyDungeon.Pages
         public Color backgroundColor { get; set; } = Color.FromRgb(0x62, 0x3E, 0xD0);
         public ImageSource avatarImage { get; set; } = new BitmapImage(new Uri("D:/SUTE/ООП/Курсова/DailyDungeon/DailyDungeon/Resources/Images/Avatars/Avatar1.jpg", UriKind.Relative));
 
+        private readonly string[] habitSortCategory = { "Назвою", "Описом", "Складністю", "Типом", "Тегом" };
+
         public HabitsWindow(string userName, bool isMaximized, Color Background, ImageSource Avatar)
         {
             InitializeComponent();
@@ -35,8 +37,10 @@ namespace DailyDungeon.Pages
 
             this.Deactivated += Window_Deactivated;
             this.Activated += Window_Activated;
+            this.IsHitTestVisibleChanged += Window_IsHitTestVisibleChanged;
 
             username = "Anastasia";
+            userTextBlock.Text = username;
             using (var context = new DailyDungeonEntities())
             {
                 var user = context.users.FirstOrDefault(u => u.login_user == username);
@@ -55,12 +59,14 @@ namespace DailyDungeon.Pages
 
             string query = $"select * from {username}_habits";
 
-            tasksDataGrid.ItemsSource = DailyDungeonEntities.GetContext().Database.SqlQuery<habits>(query).ToList();
+            habitsDataGrid.ItemsSource = DailyDungeonEntities.GetContext().Database.SqlQuery<habits>(query).ToList();
 
             backgroundColor = Background;
             avatarImage = Avatar;
             background.Background = new SolidColorBrush(backgroundColor);
             avatar.Fill = new ImageBrush(avatarImage);
+
+            sortComboBox.ItemsSource = habitSortCategory;
         }
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
@@ -126,21 +132,15 @@ namespace DailyDungeon.Pages
 
         private void AddHabit_Click(object sender, RoutedEventArgs e)
         {
-            var addHabitWindow = new AddHabitWindow();
+            var addHabitWindow = new AddHabitWindow(username);
             addHabitWindow.ShowDialog();
         }
 
         private void EditHabit_Click(object sender, RoutedEventArgs e)
         {
-            habits selectedTask = (habits)tasksDataGrid.SelectedItem;
+            habits selectedHabit = (habits)habitsDataGrid.SelectedItem;
 
-            string name = selectedTask.name_habit;
-            string description = selectedTask.description_habit;
-            string complexity = selectedTask.complexity_habit;
-            string type = selectedTask.type_habit;
-            string tag = selectedTask.tag_habit;
-
-            var editHabitWindow = new EditHabitWindow(name, description, complexity, type, tag);
+            var editHabitWindow = new EditHabitWindow(username, selectedHabit);
             editHabitWindow.ShowDialog();
         }
 
@@ -154,6 +154,38 @@ namespace DailyDungeon.Pages
         {
             this.IsHitTestVisible = true;
             Overlay.Visibility = Visibility.Collapsed;
+        }
+
+        private void Window_IsHitTestVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (Visibility == Visibility.Visible)
+            {
+                DailyDungeonEntities.GetContext().ChangeTracker.Entries().ToList().ForEach(p => p.Reload());
+                string query = $"select * from {username}_habits";
+                habitsDataGrid.ItemsSource = DailyDungeonEntities.GetContext().Database.SqlQuery<habits>(query).ToList();
+            }
+        }
+
+        private void DeleteHabit_Click(object sender, RoutedEventArgs e)
+        {
+            habits selectedHabit = (habits)habitsDataGrid.SelectedItem;
+            if (MessageBox.Show("Ви дійсно бажаєте видалити це завдання?", "Увага", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                try
+                {
+                    string deleteQuery = $"DELETE FROM {username}_habits WHERE id_habit = {selectedHabit.id_habit}";
+                    DailyDungeonEntities.GetContext().Database.ExecuteSqlCommand(deleteQuery);
+                    DailyDungeonEntities.GetContext().SaveChanges();
+                    DailyDungeonEntities.GetContext().ChangeTracker.Entries().ToList().ForEach(p => p.Reload());
+                    string reloadQuery = $"select * from {username}_habits";
+                    habitsDataGrid.ItemsSource = DailyDungeonEntities.GetContext().Database.SqlQuery<habits>(reloadQuery).ToList();
+                    MessageBox.Show($"Звичку видалено.");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message.ToString());
+                }
+            }
         }
     }
 }

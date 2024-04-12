@@ -41,7 +41,7 @@
                         </Border>
 
                         <!--Menu Titles-->
-                        <TextBlock x:Name="loginTextBlock"  Text="{Binding Path=username}" Foreground="White" FontSize="24" FontWeight="SemiBold"
+                        <TextBlock x:Name="userTextBlock"  Text="User" Foreground="White" FontSize="24" FontWeight="SemiBold"
                                DockPanel.Dock="Top" TextAlignment="Center" Margin="5 0 0 5" TextWrapping="Wrap"/>
                         <TextBlock Text="Gamify your life" Foreground="#d0bfff" FontSize="14" FontWeight="SemiBold"
                                 DockPanel.Dock="Top" TextAlignment="Center"/>
@@ -147,10 +147,7 @@
                 <TextBlock Text="Сортувати за" Grid.Row="2" FontSize="13" FontWeight="SemiBold" Margin="0 0 215 0"
                         Foreground="#121518" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                 <Grid Width="200" HorizontalAlignment="Right" Grid.Row="2">
-                    <TextBlock Margin="15 0" VerticalAlignment="Center" Foreground="#b0b9c6" IsHitTestVisible="False"
-                       Panel.ZIndex="1" Text="Назва поля"
-                       Visibility="{Binding ElementName=txtFilter, Path=Text.IsEmpty, Converter={StaticResource BoolToVis}}"/>
-                    <TextBox x:Name="txtFilter" Style="{StaticResource textboxFilter}"/>
+                    <ComboBox x:Name="sortComboBox" Style="{StaticResource ComboBoxStyle1}" Height="26" VerticalAlignment="Center"/>
                 </Grid>
 
                 <!--Tasks Datagrid-->
@@ -172,7 +169,7 @@
                                         <Button Style="{StaticResource gridEditButton}" Click="EditTask_Click">
                                             <Icon:PackIconMaterial Kind="PencilOutline" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
-                                        <Button Style="{StaticResource gridRemoveButton}" Margin="5 0 0 0">
+                                        <Button Style="{StaticResource gridRemoveButton}" Margin="5 0 0 0" Click="DeleteTask_Click">
                                             <Icon:PackIconMaterial Kind="DeleteOutline" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
                                     </StackPanel>

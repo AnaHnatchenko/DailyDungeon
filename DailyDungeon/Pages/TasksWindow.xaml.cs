@@ -26,6 +26,8 @@ namespace DailyDungeon.Pages
         public Color backgroundColor { get; set; } = Color.FromRgb(0x62, 0x3E, 0xD0);
         public ImageSource avatarImage { get; set; } = new BitmapImage(new Uri("D:/SUTE/ООП/Курсова/DailyDungeon/DailyDungeon/Resources/Images/Avatars/Avatar1.jpg", UriKind.Relative));
 
+        private readonly string[] taskSortCategory = { "Назвою", "Описом", "Складністю", "Дедлайном", "Тегом" };
+
         public TasksWindow(string userName, bool isMaximized, Color Background, ImageSource Avatar)
         {
             InitializeComponent();
@@ -38,8 +40,10 @@ namespace DailyDungeon.Pages
 
             this.Deactivated += Window_Deactivated;
             this.Activated += Window_Activated;
+            this.IsHitTestVisibleChanged += Window_IsHitTestVisibleChanged;
 
             username = "Anastasia";
+            userTextBlock.Text = username;
             using (var context = new DailyDungeonEntities())
             {
                 var user = context.users.FirstOrDefault(u => u.login_user == username);
@@ -63,6 +67,8 @@ namespace DailyDungeon.Pages
             avatarImage = Avatar;
             background.Background = new SolidColorBrush(backgroundColor);
             avatar.Fill = new ImageBrush(avatarImage);
+
+            sortComboBox.ItemsSource = taskSortCategory;
         }
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
@@ -128,21 +134,14 @@ namespace DailyDungeon.Pages
 
         private void AddTask_Click(object sender, RoutedEventArgs e)
         {
-            var addTaskWindow = new AddTaskWindow();
+            var addTaskWindow = new AddTaskWindow(username);
             addTaskWindow.ShowDialog();
         }
 
         private void EditTask_Click(object sender, RoutedEventArgs e)
         {
             tasks selectedTask = (tasks) tasksDataGrid.SelectedItem;
-
-            string name = selectedTask.name_task;
-            string description = selectedTask.description_task;
-            string complexity = selectedTask.complexity_task;
-            string tag = selectedTask.tag_task;
-            DateTime deadline = DateTime.Parse(selectedTask.deadline_task);
-
-            var editTaskWindow = new EditTaskWindow(name, description, complexity, tag, deadline);
+            var editTaskWindow = new EditTaskWindow(username, selectedTask);
             editTaskWindow.ShowDialog();
         }
 
@@ -156,6 +155,38 @@ namespace DailyDungeon.Pages
         {
             this.IsHitTestVisible = true;
             Overlay.Visibility = Visibility.Collapsed;
+        }
+
+        private void Window_IsHitTestVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (Visibility == Visibility.Visible)
+            {
+                DailyDungeonEntities.GetContext().ChangeTracker.Entries().ToList().ForEach(p => p.Reload());
+                string query = $"select * from {username}_tasks";
+                tasksDataGrid.ItemsSource = DailyDungeonEntities.GetContext().Database.SqlQuery<tasks>(query).ToList();
+            }
+        }
+
+        private void DeleteTask_Click(object sender, RoutedEventArgs e)
+        {
+            tasks selectedTask = (tasks)tasksDataGrid.SelectedItem;
+            if (MessageBox.Show("Ви дійсно бажаєте видалити це завдання?", "Увага", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                try
+                {
+                    string deleteQuery = $"DELETE FROM {username}_tasks WHERE id_task = {selectedTask.id_task}";
+                    DailyDungeonEntities.GetContext().Database.ExecuteSqlCommand(deleteQuery);
+                    DailyDungeonEntities.GetContext().SaveChanges();
+                    DailyDungeonEntities.GetContext().ChangeTracker.Entries().ToList().ForEach(p => p.Reload());
+                    string reloadQuery = $"select * from {username}_tasks";
+                    tasksDataGrid.ItemsSource = DailyDungeonEntities.GetContext().Database.SqlQuery<tasks>(reloadQuery).ToList();
+                    MessageBox.Show($"Завдання видалено.");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message.ToString());
+                }
+            }
         }
     }
 }

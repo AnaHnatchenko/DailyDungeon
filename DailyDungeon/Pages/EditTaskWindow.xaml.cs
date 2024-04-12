@@ -17,32 +17,24 @@ namespace DailyDungeon.Pages
 {
     public partial class EditTaskWindow : Window
     {
-        public string name { get; set; }
-        public string description { get; set; }
-        public string complexity { get; set; }
-        public string tag { get; set; }
-        public DateTime deadline { get; set; }
+        public string username { get; set; }
 
         private readonly string[] taskComplexity = { "Легко", "Середньо", "Складно" };
         private readonly string[] taskTags = { "Робота", "Навчання", "Здоров'я", "Хобі" };
 
-        public EditTaskWindow(string Name, string Description, string Complexity, string Tag, DateTime Deadline)
+        private tasks task = new tasks();
+
+        public EditTaskWindow(string userName, tasks selectedTask)
         {
             InitializeComponent();
-            InitializeComponent();
+            username = userName;
+
             tagsComboBox.ItemsSource = taskTags;
             complexityComboBox.ItemsSource = taskComplexity;
 
-            name = Name;
-            description = Description;
-            complexity = Complexity;
-            tag = Tag;
-            deadline = Deadline;
-
-            txtName.Text = name;
-            txtDescription.Text = description;
-            complexityComboBox.SelectedItem = complexity;
-            tagsComboBox.SelectedItem = tag;
+            task = selectedTask;
+            DataContext = task;
+            DateTime deadline = DateTime.ParseExact(task.deadline_task, "dd.MM.yyyy", CultureInfo.InvariantCulture);
             deadlineDatePicker.SelectedDate = deadline;
         }
 
@@ -78,6 +70,22 @@ namespace DailyDungeon.Pages
 
         private void EditTask_Click(object sender, RoutedEventArgs e)
         {
+            task.name_task = task.name_task.Trim();
+            task.description_task = task.description_task.Trim();
+            if (string.IsNullOrWhiteSpace(task.tag_task)) task.tag_task = "";
+            task.deadline_task = deadlineDatePicker.SelectedDate?.ToString("dd.MM.yyyy");
+            string query = $"update {username}_tasks set name_task = '{task.name_task}', description_task = '{task.description_task}', complexity_task = '{task.complexity_task}', " +
+                $"tag_task = '{task.tag_task}', deadline_task = '{task.deadline_task}' where id_task = '{task.id_task}'";
+            try
+            {
+                DailyDungeonEntities.GetContext().Database.ExecuteSqlCommand(query);
+                DailyDungeonEntities.GetContext().SaveChanges();
+                MessageBox.Show($"Завдання успішно відредаговано!");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message.ToString());
+            }
             this.Hide();
         }
 

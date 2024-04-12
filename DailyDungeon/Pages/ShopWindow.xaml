@@ -41,7 +41,7 @@
                         </Border>
 
                         <!--Menu Titles-->
-                        <TextBlock x:Name="loginTextBlock"  Text="{Binding Path=username}" Foreground="White" FontSize="24" FontWeight="SemiBold"
+                        <TextBlock x:Name="userTextBlock"  Text="User" Foreground="White" FontSize="24" FontWeight="SemiBold"
                            DockPanel.Dock="Top" TextAlignment="Center" Margin="5 0 0 5" TextWrapping="Wrap"/>
                         <TextBlock Text="Gamify your life" Foreground="#d0bfff" FontSize="14" FontWeight="SemiBold"
                             DockPanel.Dock="Top" TextAlignment="Center"/>
