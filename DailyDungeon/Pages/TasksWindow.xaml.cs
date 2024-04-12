@@ -21,9 +21,12 @@ namespace DailyDungeon.Pages
     {
         public string username {  get; set; }
         public bool IsMaximized {  get; set; }
-        public TasksWindow(string userName, bool isMaximized)
-        {
 
+        public Color backgroundColor = Color.FromRgb(0x62, 0x3E, 0xD0);
+        public ImageSource avatarImage = new BitmapImage(new Uri("D:/SUTE/ООП/Курсова/DailyDungeon/DailyDungeon/Resources/Images/Avatars/Avatar1.jpg", UriKind.Relative));
+
+        public TasksWindow(string userName, bool isMaximized, Color Background, ImageSource Avatar)
+        {
             InitializeComponent();
             IsMaximized = isMaximized;
             if (IsMaximized )
@@ -40,8 +43,12 @@ namespace DailyDungeon.Pages
             this.DataContext = this;
 
             string query = $"select * from {username}_tasks";
-
             tasksDataGrid.ItemsSource = DailyDungeonEntities.GetContext().Database.SqlQuery<tasks>(query).ToList();
+
+            backgroundColor = Background;
+            avatarImage = Avatar;
+            background.Background = new SolidColorBrush(backgroundColor);
+            avatar.Fill = new ImageBrush(avatarImage);
         }
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
@@ -73,21 +80,21 @@ namespace DailyDungeon.Pages
 
         private void Habits_Click(object sender, RoutedEventArgs e)
         {
-            var habitsWindow = new HabitsWindow(username, IsMaximized);
+            var habitsWindow = new HabitsWindow(username, IsMaximized, backgroundColor, avatarImage);
             habitsWindow.Show();
             this.Close();
         }
 
         private void Inventory_Click(object sender, RoutedEventArgs e)
         {
-            var inventoryWindow = new InventoryWindow(username, IsMaximized);
+            var inventoryWindow = new InventoryWindow(username, IsMaximized, backgroundColor, avatarImage);
             inventoryWindow.Show();
             this.Close();
         }
 
         private void Shop_Click(object sender, RoutedEventArgs e)
         {
-            var shopWindow = new ShopWindow(username, IsMaximized);
+            var shopWindow = new ShopWindow(username, IsMaximized, backgroundColor, avatarImage);
             shopWindow.Show();
             this.Close();
         }
@@ -108,7 +115,7 @@ namespace DailyDungeon.Pages
         private void AddTask_Click(object sender, RoutedEventArgs e)
         {
             var addTaskWindow = new AddTaskWindow();
-            addTaskWindow.Show();
+            addTaskWindow.ShowDialog();
         }
 
         private void EditTask_Click(object sender, RoutedEventArgs e)
@@ -122,17 +129,19 @@ namespace DailyDungeon.Pages
             DateTime deadline = DateTime.Parse(selectedTask.deadline_task);
 
             var editTaskWindow = new EditTaskWindow(name, description, complexity, tag, deadline);
-            editTaskWindow.Show();
+            editTaskWindow.ShowDialog();
         }
 
         private void Window_Deactivated(object sender, EventArgs e)
         {
             this.IsHitTestVisible = false;
+            Overlay.Visibility = Visibility.Visible;
         }
 
         private void Window_Activated(object sender, EventArgs e)
         {
             this.IsHitTestVisible = true;
+            Overlay.Visibility = Visibility.Collapsed;
         }
     }
 }

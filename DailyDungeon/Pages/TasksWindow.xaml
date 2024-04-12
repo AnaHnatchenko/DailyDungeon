@@ -16,6 +16,8 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
+            <Rectangle x:Name="Overlay" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="2" Fill="Black" Opacity="0.5" Panel.ZIndex="3" Visibility="Collapsed"/>
+            
             <!--Left Menu-->
             <Grid>
                 <Grid.RowDefinitions>
@@ -26,12 +28,12 @@
                 <!--Menu Icon-->
                 <TextBlock Text="DailyDungeon" Grid.Row="0" FontSize="24" FontWeight="Bold" Margin="19 23 0 51" HorizontalAlignment="Left" Foreground="#512da8"/>
 
-                <Border Grid.Row="1" Background="#623ed0" CornerRadius="0 50 0 0">
+                <Border x:Name="background" Grid.Row="1" Background="#623ed0" CornerRadius="0 50 0 0">
                     <DockPanel>
                         <!--Menu Logo-->
                         <Border Width="100" Height="100" Padding="3" Background="#512da8" CornerRadius="100"
                             DockPanel.Dock="Top" HorizontalAlignment="Center" Margin="0 -30 0 20">
-                            <Ellipse>
+                            <Ellipse x:Name="avatar">
                                 <Ellipse.Fill>
                                     <ImageBrush ImageSource="/Resources/Images/Avatars/Avatar1.jpg"/>
                                 </Ellipse.Fill>

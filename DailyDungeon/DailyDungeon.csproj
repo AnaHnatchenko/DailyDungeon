@@ -111,6 +111,9 @@
     <Compile Include="Pages\EditHabitWindow.xaml.cs">
       <DependentUpon>EditHabitWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\InventoryObjectInfoWindow.xaml.cs">
+      <DependentUpon>InventoryObjectInfoWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\InventoryWindow.xaml.cs">
       <DependentUpon>InventoryWindow.xaml</DependentUpon>
     </Compile>
@@ -119,6 +122,9 @@
     </Compile>
     <Compile Include="Pages\EditTaskWindow.xaml.cs">
       <DependentUpon>EditTaskWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ShopObjectInfoWindow.xaml.cs">
+      <DependentUpon>ShopObjectInfoWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\ShopWindow.xaml.cs">
       <DependentUpon>ShopWindow.xaml</DependentUpon>
@@ -187,6 +193,10 @@
       <DependentUpon>DataBaseModel.edmx</DependentUpon>
       <LastGenOutput>DataBaseModel.cs</LastGenOutput>
     </Content>
+    <Resource Include="Resources\Images\Avatars\Avatar17.jpg" />
+    <Resource Include="Resources\Images\Avatars\Avatar18.jpg" />
+    <Resource Include="Resources\Images\Avatars\Avatar19.jpg" />
+    <Resource Include="Resources\Images\Avatars\Avatar20.jpg" />
     <Resource Include="Resources\Images\Avatars\Avatar10.jpg" />
     <Resource Include="Resources\Images\Avatars\Avatar11.jpg" />
     <Resource Include="Resources\Images\Avatars\Avatar12.jpg" />
@@ -223,11 +233,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Pages\InventoryObjectInfoWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\InventoryWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\LoginWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\ShopObjectInfoWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

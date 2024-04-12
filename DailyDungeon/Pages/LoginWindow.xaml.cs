@@ -85,7 +85,7 @@ namespace DailyDungeon.Pages
         {
             if (!string.IsNullOrEmpty(txtEmail.Text) && !string.IsNullOrEmpty(txtPassword.Password))
             {
-                var tasksWindow = new TasksWindow(txtEmail.Text, IsMaximized);
+                var tasksWindow = new TasksWindow(txtEmail.Text, IsMaximized, Color.FromRgb(0x62, 0x3E, 0xD0), new BitmapImage(new Uri("D:/SUTE/ООП/Курсова/DailyDungeon/DailyDungeon/Resources/Images/Avatars/Avatar1.jpg", UriKind.Relative)));
                 tasksWindow.Show();
                 this.Close();
             }

@@ -18,11 +18,15 @@ namespace DailyDungeon.Pages
     {
         public string username { get; set; }
         public bool IsMaximized { get; set; }
-        public ShopWindow(string userName, bool isMaximized)
+
+        public Color backgroundColor = Color.FromRgb(0x62, 0x3E, 0xD0);
+        public ImageSource avatarImage = new BitmapImage(new Uri("D:/SUTE/ООП/Курсова/DailyDungeon/DailyDungeon/Resources/Images/Avatars/Avatar1.jpg", UriKind.Relative));
+
+        public ShopWindow(string userName, bool isMaximized, Color Background, ImageSource Avatar)
         {
             InitializeComponent();
             AddShopBackgroundObjects(shopBackgrounds, 100);
-            AddShopAvatarObjects(shopAvatars, 16);
+            AddShopAvatarObjects(shopAvatars, 20);
 
             IsMaximized = isMaximized;
             if (IsMaximized)
@@ -35,6 +39,11 @@ namespace DailyDungeon.Pages
             this.Activated += Window_Activated;
 
             username = "Anastasia";
+
+            backgroundColor = Background;
+            avatarImage = Avatar;
+            background.Background = new SolidColorBrush(backgroundColor);
+            avatar.Fill = new ImageBrush(avatarImage);
         }
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
@@ -66,21 +75,21 @@ namespace DailyDungeon.Pages
 
         private void Tasks_Click(object sender, RoutedEventArgs e)
         {
-            var tasksWindow = new TasksWindow(username, IsMaximized);
+            var tasksWindow = new TasksWindow(username, IsMaximized, backgroundColor, avatarImage);
             tasksWindow.Show();
             this.Close();
         }
 
         private void Habits_Click(object sender, RoutedEventArgs e)
         {
-            var habitsWindow = new HabitsWindow(username, IsMaximized);
+            var habitsWindow = new HabitsWindow(username, IsMaximized, backgroundColor, avatarImage);
             habitsWindow.Show();
             this.Close();
         }
 
         private void Inventory_Click(object sender, RoutedEventArgs e)
         {
-            var inventoryWindow = new InventoryWindow(username, IsMaximized);
+            var inventoryWindow = new InventoryWindow(username, IsMaximized, backgroundColor, avatarImage);
             inventoryWindow.Show();
             this.Close();
         }
@@ -101,11 +110,13 @@ namespace DailyDungeon.Pages
         private void Window_Deactivated(object sender, EventArgs e)
         {
             this.IsHitTestVisible = false;
+            Overlay.Visibility = Visibility.Visible;
         }
 
         private void Window_Activated(object sender, EventArgs e)
         {
             this.IsHitTestVisible = true;
+            Overlay.Visibility = Visibility.Collapsed;
         }
 
         private void AddShopBackgroundObjects(WrapPanel panel, int count)
@@ -116,6 +127,7 @@ namespace DailyDungeon.Pages
             {
                 Border border = new Border();
                 border.Style = (Style)Application.Current.FindResource("objectBorder");
+                border.MouseDown += Object_Click;
 
                 Rectangle rectangle = new Rectangle();
                 rectangle.Style = (Style)Application.Current.FindResource("objectImage");
@@ -159,6 +171,7 @@ namespace DailyDungeon.Pages
             {
                 Border border = new Border();
                 border.Style = (Style)Application.Current.FindResource("objectBorder");
+                border.MouseDown += Object_Click;
 
                 Rectangle rectangle = new Rectangle();
                 rectangle.Style = (Style)Application.Current.FindResource("shopObjectImageAvatar");
@@ -176,6 +189,7 @@ namespace DailyDungeon.Pages
 
                 TextBlock textBlock = new TextBlock();
                 textBlock.Style = (Style)Application.Current.FindResource("priceTextBlock");
+                textBlock.Text = "100";
 
                 StackPanel stackPanel = new StackPanel();
                 stackPanel.Style = (Style)Application.Current.FindResource("shopObjectStackPanel");
@@ -197,6 +211,24 @@ namespace DailyDungeon.Pages
 
                 border.Child = grid;
                 panel.Children.Add(border);
+            }
+        }
+
+        private void Object_Click(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is Border border && border.Child is Grid grid && grid.Children.Count > 0 && grid.Children[0] is Rectangle rectangle)
+            { 
+                if (rectangle.Fill is SolidColorBrush solidColorBrush)
+                {
+                    Color color = solidColorBrush.Color;
+                    var shopObjectInfoWindow = new ShopObjectInfoWindow(username, color);
+                    shopObjectInfoWindow.ShowDialog();
+                }
+                if (rectangle.Fill is ImageBrush imageBrush && imageBrush.ImageSource is BitmapImage image)
+                {
+                    var shopObjectInfoWindow = new ShopObjectInfoWindow(username, image);
+                    shopObjectInfoWindow.ShowDialog();
+                }
             }
         }
     }

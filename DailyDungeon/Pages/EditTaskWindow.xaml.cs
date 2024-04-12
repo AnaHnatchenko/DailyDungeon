@@ -30,7 +30,6 @@ namespace DailyDungeon.Pages
         {
             InitializeComponent();
             InitializeComponent();
-            this.Deactivated += ModalWindow_Deactivated;
             tagsComboBox.ItemsSource = taskTags;
             complexityComboBox.ItemsSource = taskComplexity;
 
@@ -85,11 +84,6 @@ namespace DailyDungeon.Pages
         private void Close_Click(object sender, RoutedEventArgs e)
         {
             this.Hide();
-        }
-
-        private void ModalWindow_Deactivated(object sender, EventArgs e)
-        {
-            this.Close();
         }
     }
 }

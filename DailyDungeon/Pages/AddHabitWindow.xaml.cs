@@ -24,7 +24,6 @@ namespace DailyDungeon.Pages
         public AddHabitWindow()
         {
             InitializeComponent();
-            this.Deactivated += ModalWindow_Deactivated;
             complexityComboBox.ItemsSource = habitComplexity;
             typeComboBox.ItemsSource = habitType;
             tagsComboBox.ItemsSource = habitTags;
@@ -51,11 +50,6 @@ namespace DailyDungeon.Pages
         private void Close_Click(object sender, RoutedEventArgs e)
         {
             this.Hide();
-        }
-
-        private void ModalWindow_Deactivated(object sender, EventArgs e)
-        {
-            this.Close();
         }
     }
 }
