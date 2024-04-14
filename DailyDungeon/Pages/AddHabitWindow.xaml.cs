@@ -46,7 +46,6 @@ namespace DailyDungeon.Pages
             {
                 habit.login_user = username;
                 habit.name_habit = habit.name_habit.Trim();
-                habit.description_habit = habit.description_habit.Trim();
                 if (string.IsNullOrWhiteSpace(habit.description_habit)) habit.description_habit = String.Empty;
                 else habit.description_habit = habit.description_habit.Trim();
                 if (string.IsNullOrWhiteSpace(habit.tag_habit)) habit.tag_habit = String.Empty;

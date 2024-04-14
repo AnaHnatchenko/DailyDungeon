@@ -44,14 +44,7 @@ namespace DailyDungeon.Pages
             using (var context = new DailyDungeonEntities())
             {
                 var user = context.users.FirstOrDefault(u => u.login_user == username);
-                if (user != null)
-                {
-                    moneyCount = user.money_count;
-                }
-                else
-                {
-                    moneyCount = 0;
-                }
+                if (user != null) moneyCount = user.money_count;
             }
             moneyCountText.Text = $"{moneyCount}";
 

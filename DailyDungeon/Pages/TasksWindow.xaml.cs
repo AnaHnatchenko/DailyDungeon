@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Data;
+using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.Remoting.Contexts;
 using System.Text;
@@ -19,14 +22,18 @@ using System.Windows.Shapes;
 
 namespace DailyDungeon.Pages
 {
+
     public partial class TasksWindow : Window
     {
         public string username {  get; set; }
         public int moneyCount { get; set; }
         public bool IsMaximized {  get; set; }
-        public List<tasks> tasksList = new List<tasks>();
 
-        private readonly string[] taskSortCategory = { "Назвою", "Описом", "Складністю", "Дедлайном", "Тегом" };
+        public List<tasks> tasksList = new List<tasks>();
+        public List<tasks> activeTasks = new List<tasks>();
+        public List<tasks> overdueTasks = new List<tasks>();
+
+        private readonly string[] taskSortCategory = { "Назва", "Опис", "Складність", "Дедлайн", "Тег" };
 
         public TasksWindow(string userName, bool isMaximized)
         {
@@ -45,25 +52,32 @@ namespace DailyDungeon.Pages
 
             username = userName;
             userTextBlock.Text = username;
-            
+
+            using (var context = new DailyDungeonEntities())
+            {
+                var user = context.users.FirstOrDefault(u => u.login_user == username);
+                if (user != null) moneyCount = user.money_count;
+            }
+            moneyCountText.Text = $"{moneyCount}";
+
             using (var context = new DailyDungeonEntities())
             {
                 tasksList = context.tasks.Where(t => t.login_user == username).ToList();
-                tasksDataGrid.ItemsSource = tasksList;
-
-                var user = context.users.FirstOrDefault(u => u.login_user == username);
-                if (user != null)
-                {
-                    moneyCount = user.money_count;
-                }
-                else
-                {
-                    moneyCount = 0;
-                }
             }
-            moneyCountText.Text = $"{moneyCount}";
+            foreach (var task in tasksList)
+            {
+                DateTime dateTime = DateTime.Now;
+                DateTime deadline = DateTime.ParseExact(task.deadline_task, "dd.MM.yyyy", CultureInfo.InvariantCulture);
+                if (deadline.Date < dateTime.Date) overdueTasks.Add(task);
+                else activeTasks.Add(task);
+            }
+            tasksDataGrid.ItemsSource = tasksList;
+            activeTasksDataGrid.ItemsSource = activeTasks;
+            overdueTasksDataGrid.ItemsSource = overdueTasks;
             
             sortComboBox.ItemsSource = taskSortCategory;
+            sortComboBox.Loaded += ComboBox_Loaded;
+            sortComboBox.SelectionChanged += ComboBox_SelectionChanged;
 
             Color backgroundColor;
             using (var context = new DailyDungeonEntities())
@@ -167,15 +181,31 @@ namespace DailyDungeon.Pages
             Overlay.Visibility = Visibility.Collapsed;
         }
 
-        private void Window_IsHitTestVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        public void Window_IsHitTestVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if (Visibility == Visibility.Visible)
             {
                 using (var context = new DailyDungeonEntities())
                 {
                     context.ChangeTracker.Entries().ToList().ForEach(p => p.Reload());
+
+                    var user = context.users.FirstOrDefault(u => u.login_user == username);
+                    if (user != null) moneyCount = user.money_count;
+                    moneyCountText.Text = $"{moneyCount}";
+
+                    activeTasks.Clear();
+                    overdueTasks.Clear();
                     tasksList = context.tasks.Where(t => t.login_user == username).ToList();
+                    foreach (var task in tasksList)
+                    {
+                        DateTime dateTime = DateTime.Now;
+                        DateTime deadline = DateTime.ParseExact(task.deadline_task, "dd.MM.yyyy", CultureInfo.InvariantCulture);
+                        if (deadline.Date < dateTime.Date) overdueTasks.Add(task);
+                        else activeTasks.Add(task);
+                    }
                     tasksDataGrid.ItemsSource = tasksList;
+                    activeTasksDataGrid.ItemsSource = activeTasks;
+                    overdueTasksDataGrid.ItemsSource = overdueTasks;
                 }
             }
         }
@@ -195,8 +225,19 @@ namespace DailyDungeon.Pages
                             context.tasks.Remove(taskToDelete);
                             context.SaveChanges();
 
+                            activeTasks.Clear();
+                            overdueTasks.Clear();
                             tasksList = context.tasks.Where(t => t.login_user == username).ToList();
+                            foreach (var task in tasksList)
+                            {
+                                DateTime dateTime = DateTime.Now;
+                                DateTime deadline = DateTime.ParseExact(task.deadline_task, "dd.MM.yyyy", CultureInfo.InvariantCulture);
+                                if (deadline.Date < dateTime.Date) overdueTasks.Add(task);
+                                else activeTasks.Add(task);
+                            }
                             tasksDataGrid.ItemsSource = tasksList;
+                            activeTasksDataGrid.ItemsSource = activeTasks;
+                            overdueTasksDataGrid.ItemsSource = overdueTasks;
 
                             MessageBox.Show("Завдання видалено.");
                         }
@@ -211,6 +252,87 @@ namespace DailyDungeon.Pages
                     MessageBox.Show($"Виникла помилка при видаленні завдання: {ex.Message}");
                 }
             }
+        }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var comboBox = sender as ComboBox;
+            string selectedcategry = comboBox.SelectedItem as string;
+            SortColumn(selectedcategry);
+        }
+
+        private void ComboBox_Loaded(object sender, RoutedEventArgs e)
+        {
+            var comboBox = sender as ComboBox;
+            if (comboBox != null)
+            {
+                comboBox.Loaded -= ComboBox_Loaded;
+            }
+            string selectedcategry = comboBox.SelectedItem as string;
+            SortColumn(selectedcategry);
+        }
+
+        private void SortColumn(string columnName)
+        {
+            var column = tasksDataGrid.Columns.SingleOrDefault(c => c.Header != null && c.Header.ToString() == columnName);
+
+            if (column != null)
+            {
+                column.SortDirection = ListSortDirection.Ascending;
+                tasksDataGrid.Items.SortDescriptions.Clear();
+                tasksDataGrid.Items.SortDescriptions.Add(new SortDescription(column.SortMemberPath, column.SortDirection.Value));
+                activeTasksDataGrid.Items.SortDescriptions.Clear();
+                activeTasksDataGrid.Items.SortDescriptions.Add(new SortDescription(column.SortMemberPath, column.SortDirection.Value));
+                overdueTasksDataGrid.Items.SortDescriptions.Clear();
+                overdueTasksDataGrid.Items.SortDescriptions.Add(new SortDescription(column.SortMemberPath, column.SortDirection.Value));
+            }
+        }
+
+        private void txtSearch_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            activeTasks.Clear();
+            overdueTasks.Clear();
+
+            using (var context = new DailyDungeonEntities())
+            {
+                tasksList = context.tasks.Where(t => t.login_user == username).ToList();
+            }
+            foreach (var task in tasksList)
+            {
+                DateTime dateTime = DateTime.Now;
+                DateTime deadline = DateTime.ParseExact(task.deadline_task, "dd.MM.yyyy", CultureInfo.InvariantCulture);
+                if (deadline.Date < dateTime.Date) overdueTasks.Add(task);
+                else activeTasks.Add(task);
+            }
+
+            tasksList = tasksList.Where(t => t.name_task.ToLower().Contains(txtSearch.Text.ToLower())).ToList();
+            activeTasks = activeTasks.Where(t => t.name_task.ToLower().Contains(txtSearch.Text.ToLower())).ToList();
+            overdueTasks = overdueTasks.Where(t => t.name_task.ToLower().Contains(txtSearch.Text.ToLower())).ToList();
+
+            tasksDataGrid.ItemsSource = tasksList;
+            activeTasksDataGrid.ItemsSource = activeTasks;
+            overdueTasksDataGrid.ItemsSource = overdueTasks;
+        }
+
+        public void Window_Update()
+        {
+            activeTasks.Clear();
+            overdueTasks.Clear();
+            using (var context = new DailyDungeonEntities())
+            {
+                context.ChangeTracker.Entries().ToList().ForEach(p => p.Reload());
+                tasksList = context.tasks.Where(t => t.login_user == username).ToList();
+            }
+            foreach (var task in tasksList)
+            {
+                DateTime dateTime = DateTime.Now;
+                DateTime deadline = DateTime.ParseExact(task.deadline_task, "dd.MM.yyyy", CultureInfo.InvariantCulture);
+                if (deadline.Date < dateTime.Date) overdueTasks.Add(task);
+                else activeTasks.Add(task);
+            }
+            tasksDataGrid.ItemsSource = tasksList;
+            activeTasksDataGrid.ItemsSource = activeTasks;
+            overdueTasksDataGrid.ItemsSource = overdueTasks;
         }
     }
 }

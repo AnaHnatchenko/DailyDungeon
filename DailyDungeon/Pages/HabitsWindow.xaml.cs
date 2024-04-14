@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,10 +19,14 @@ namespace DailyDungeon.Pages
     {
         public string username { get; set; }
         public int moneyCount { get; set; }
-        public List<habits> habitsList = new List<habits>();
         public bool IsMaximized { get; set; }
 
-        private readonly string[] habitSortCategory = { "Назвою", "Описом", "Складністю", "Типом", "Тегом" };
+        public List<habits> habitsList = new List<habits>();
+        public List<habits> positiveHabits = new List<habits>();
+        public List<habits> negativeHabits = new List<habits>();
+        public List<habits> neutralHabits = new List<habits>();
+
+        private readonly string[] habitSortCategory = { "Назва", "Опис", "Складність", "Тип", "Тег" };
 
         public HabitsWindow(string userName, bool isMaximized)
         {
@@ -40,24 +45,32 @@ namespace DailyDungeon.Pages
 
             username = userName;
             userTextBlock.Text = username;
+
             using (var context = new DailyDungeonEntities())
             {
-                habitsList = context.habits.Where(t => t.login_user == username).ToList();
-                habitsDataGrid.ItemsSource = habitsList;
-
                 var user = context.users.FirstOrDefault(u => u.login_user == username);
-                if (user != null)
-                {
-                    moneyCount = user.money_count;
-                }
-                else
-                {
-                    moneyCount = 0;
-                }
+                if (user != null) moneyCount = user.money_count;
             }
             moneyCountText.Text = $"{moneyCount}";
 
+            using (var context = new DailyDungeonEntities())
+            {
+                habitsList = context.habits.Where(t => t.login_user == username).ToList();
+            }
+            foreach (var habit in habitsList)
+            {
+                if (habit.type_habit == "Позитивна") positiveHabits.Add(habit);
+                else if (habit.type_habit == "Негативна") negativeHabits.Add(habit);
+                else neutralHabits.Add(habit);
+            }
+            habitsDataGrid.ItemsSource = habitsList;
+            positiveHabitsDataGrid.ItemsSource = positiveHabits;
+            negativeHabitsDataGrid.ItemsSource= negativeHabits;
+            neutralHabitsDataGrid.ItemsSource = neutralHabits;
+
             sortComboBox.ItemsSource = habitSortCategory;
+            sortComboBox.Loaded += ComboBox_Loaded;
+            sortComboBox.SelectionChanged += ComboBox_SelectionChanged;
 
             Color backgroundColor;
             using (var context = new DailyDungeonEntities())
@@ -169,8 +182,25 @@ namespace DailyDungeon.Pages
                 using (var context = new DailyDungeonEntities())
                 {
                     context.ChangeTracker.Entries().ToList().ForEach(p => p.Reload());
+
+                    var user = context.users.FirstOrDefault(u => u.login_user == username);
+                    if (user != null) moneyCount = user.money_count;
+                    moneyCountText.Text = $"{moneyCount}";
+
+                    positiveHabits.Clear();
+                    negativeHabits.Clear();
+                    neutralHabits.Clear();
                     habitsList = context.habits.Where(t => t.login_user == username).ToList();
+                    foreach (var habit in habitsList)
+                    {
+                        if (habit.type_habit == "Позитивна") positiveHabits.Add(habit);
+                        else if (habit.type_habit == "Негативна") negativeHabits.Add(habit);
+                        else neutralHabits.Add(habit);
+                    }
                     habitsDataGrid.ItemsSource = habitsList;
+                    positiveHabitsDataGrid.ItemsSource = positiveHabits;
+                    negativeHabitsDataGrid.ItemsSource = negativeHabits;
+                    neutralHabitsDataGrid.ItemsSource = neutralHabits;
                 }
             }
         }
@@ -190,8 +220,20 @@ namespace DailyDungeon.Pages
                             context.habits.Remove(habitToDelete);
                             context.SaveChanges();
 
+                            positiveHabits.Clear();
+                            negativeHabits.Clear();
+                            neutralHabits.Clear();
                             habitsList = context.habits.Where(t => t.login_user == username).ToList();
+                            foreach (var habit in habitsList)
+                            {
+                                if (habit.type_habit == "Позитивна") positiveHabits.Add(habit);
+                                else if (habit.type_habit == "Негативна") negativeHabits.Add(habit);
+                                else neutralHabits.Add(habit);
+                            }
                             habitsDataGrid.ItemsSource = habitsList;
+                            positiveHabitsDataGrid.ItemsSource = positiveHabits;
+                            negativeHabitsDataGrid.ItemsSource = negativeHabits;
+                            neutralHabitsDataGrid.ItemsSource = neutralHabits;
 
                             MessageBox.Show("Звичку видалено.");
                         }
@@ -206,6 +248,70 @@ namespace DailyDungeon.Pages
                     MessageBox.Show($"Виникла помилка при видаленні звички: {ex.Message}");
                 }
             }
+        }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var comboBox = sender as ComboBox;
+            string selectedcategry = comboBox.SelectedItem as string;
+            SortColumn(selectedcategry);
+        }
+
+        private void ComboBox_Loaded(object sender, RoutedEventArgs e)
+        {
+            var comboBox = sender as ComboBox;
+            if (comboBox != null)
+            {
+                comboBox.Loaded -= ComboBox_Loaded;
+            }
+            string selectedcategry = comboBox.SelectedItem as string;
+            SortColumn(selectedcategry);
+        }
+
+        private void SortColumn(string columnName)
+        {
+            var column = habitsDataGrid.Columns.SingleOrDefault(c => c.Header != null && c.Header.ToString() == columnName);
+
+            if (column != null)
+            {
+                column.SortDirection = ListSortDirection.Ascending;
+                habitsDataGrid.Items.SortDescriptions.Clear();
+                habitsDataGrid.Items.SortDescriptions.Add(new SortDescription(column.SortMemberPath, column.SortDirection.Value));
+                positiveHabitsDataGrid.Items.SortDescriptions.Clear();
+                positiveHabitsDataGrid.Items.SortDescriptions.Add(new SortDescription(column.SortMemberPath, column.SortDirection.Value));
+                negativeHabitsDataGrid.Items.SortDescriptions.Clear();
+                negativeHabitsDataGrid.Items.SortDescriptions.Add(new SortDescription(column.SortMemberPath, column.SortDirection.Value));
+                neutralHabitsDataGrid.Items.SortDescriptions.Clear();
+                neutralHabitsDataGrid.Items.SortDescriptions.Add(new SortDescription(column.SortMemberPath, column.SortDirection.Value));
+            }
+        }
+
+        private void txtSearch_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            positiveHabits.Clear();
+            negativeHabits.Clear();
+            neutralHabits.Clear();
+
+            using (var context = new DailyDungeonEntities())
+            {
+                habitsList = context.habits.Where(t => t.login_user == username).ToList();
+            }
+            foreach (var habit in habitsList)
+            {
+                if (habit.type_habit == "Позитивна") positiveHabits.Add(habit);
+                else if (habit.type_habit == "Негативна") negativeHabits.Add(habit);
+                else neutralHabits.Add(habit);
+            }
+
+            habitsList = habitsList.Where(t => t.name_habit.ToLower().Contains(txtSearch.Text.ToLower())).ToList();
+            positiveHabits = positiveHabits.Where(t => t.name_habit.ToLower().Contains(txtSearch.Text.ToLower())).ToList();
+            negativeHabits = negativeHabits.Where(t => t.name_habit.ToLower().Contains(txtSearch.Text.ToLower())).ToList();
+            neutralHabits = neutralHabits.Where(t => t.name_habit.ToLower().Contains(txtSearch.Text.ToLower())).ToList();
+
+            habitsDataGrid.ItemsSource = habitsList;
+            positiveHabitsDataGrid.ItemsSource = positiveHabits;
+            negativeHabitsDataGrid.ItemsSource = negativeHabits;
+            neutralHabitsDataGrid.ItemsSource = neutralHabits;
         }
     }
 }

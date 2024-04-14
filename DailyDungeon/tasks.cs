@@ -13,7 +13,25 @@ namespace DailyDungeon
         public string deadline_task { get; set; }
         public string tag_task { get; set; }
         public bool is_done { get; set; }
-    
+
+        public int ExecutionCost()
+        {
+            int cost = 0;
+            if (complexity_task == "Легко")
+            {
+                cost = 50;
+            }
+            else if (complexity_task == "Середньо")
+            {
+                cost = 100;
+            }
+            else if (complexity_task == "Складно")
+            {
+                cost = 150;
+            }
+            return cost;
+        }
+
         public virtual users users { get; set; }
     }
 }
