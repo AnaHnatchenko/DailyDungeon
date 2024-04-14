@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
+using System.Data.Entity.Infrastructure;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Runtime.Remoting.Contexts;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -22,13 +24,11 @@ namespace DailyDungeon.Pages
         public string username {  get; set; }
         public int moneyCount { get; set; }
         public bool IsMaximized {  get; set; }
-
-        public Color backgroundColor { get; set; } = Color.FromRgb(0x62, 0x3E, 0xD0);
-        public ImageSource avatarImage { get; set; } = new BitmapImage(new Uri("D:/SUTE/ООП/Курсова/DailyDungeon/DailyDungeon/Resources/Images/Avatars/Avatar1.jpg", UriKind.Relative));
+        public List<tasks> tasksList = new List<tasks>();
 
         private readonly string[] taskSortCategory = { "Назвою", "Описом", "Складністю", "Дедлайном", "Тегом" };
 
-        public TasksWindow(string userName, bool isMaximized, Color Background, ImageSource Avatar)
+        public TasksWindow(string userName, bool isMaximized)
         {
             InitializeComponent();
             IsMaximized = isMaximized;
@@ -41,11 +41,16 @@ namespace DailyDungeon.Pages
             this.Deactivated += Window_Deactivated;
             this.Activated += Window_Activated;
             this.IsHitTestVisibleChanged += Window_IsHitTestVisibleChanged;
+            this.DataContext = this;
 
-            username = "Anastasia";
+            username = userName;
             userTextBlock.Text = username;
+            
             using (var context = new DailyDungeonEntities())
             {
+                tasksList = context.tasks.Where(t => t.login_user == username).ToList();
+                tasksDataGrid.ItemsSource = tasksList;
+
                 var user = context.users.FirstOrDefault(u => u.login_user == username);
                 if (user != null)
                 {
@@ -57,18 +62,23 @@ namespace DailyDungeon.Pages
                 }
             }
             moneyCountText.Text = $"{moneyCount}";
-
-            this.DataContext = this;
-
-            string query = $"select * from {username}_tasks";
-            tasksDataGrid.ItemsSource = DailyDungeonEntities.GetContext().Database.SqlQuery<tasks>(query).ToList();
-
-            backgroundColor = Background;
-            avatarImage = Avatar;
-            background.Background = new SolidColorBrush(backgroundColor);
-            avatar.Fill = new ImageBrush(avatarImage);
-
+            
             sortComboBox.ItemsSource = taskSortCategory;
+
+            Color backgroundColor;
+            using (var context = new DailyDungeonEntities())
+            {
+                backgroundColor = (Color)ColorConverter.ConvertFromString(context.backgrounds.Where(b => b.login_user == username && b.is_used).Select(b => b.background_color).FirstOrDefault());
+            }
+            background.Background = new SolidColorBrush(backgroundColor);
+
+            string avatarImage;
+            using (var context = new DailyDungeonEntities())
+            {
+                avatarImage = context.avatars.Where(a => a.login_user == username && a.is_used).Select(a => a.image_source).FirstOrDefault();
+            }
+            BitmapImage imageSource = new BitmapImage(new Uri(avatarImage));
+            avatar.Fill = new ImageBrush(imageSource);
         }
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
@@ -100,21 +110,21 @@ namespace DailyDungeon.Pages
 
         private void Habits_Click(object sender, RoutedEventArgs e)
         {
-            var habitsWindow = new HabitsWindow(username, IsMaximized, backgroundColor, avatarImage);
+            var habitsWindow = new HabitsWindow(username, IsMaximized);
             habitsWindow.Show();
             this.Close();
         }
 
         private void Inventory_Click(object sender, RoutedEventArgs e)
         {
-            var inventoryWindow = new InventoryWindow(username, IsMaximized, backgroundColor, avatarImage);
+            var inventoryWindow = new InventoryWindow(username, IsMaximized);
             inventoryWindow.Show();
             this.Close();
         }
 
         private void Shop_Click(object sender, RoutedEventArgs e)
         {
-            var shopWindow = new ShopWindow(username, IsMaximized, backgroundColor, avatarImage);
+            var shopWindow = new ShopWindow(username, IsMaximized);
             shopWindow.Show();
             this.Close();
         }
@@ -161,9 +171,12 @@ namespace DailyDungeon.Pages
         {
             if (Visibility == Visibility.Visible)
             {
-                DailyDungeonEntities.GetContext().ChangeTracker.Entries().ToList().ForEach(p => p.Reload());
-                string query = $"select * from {username}_tasks";
-                tasksDataGrid.ItemsSource = DailyDungeonEntities.GetContext().Database.SqlQuery<tasks>(query).ToList();
+                using (var context = new DailyDungeonEntities())
+                {
+                    context.ChangeTracker.Entries().ToList().ForEach(p => p.Reload());
+                    tasksList = context.tasks.Where(t => t.login_user == username).ToList();
+                    tasksDataGrid.ItemsSource = tasksList;
+                }
             }
         }
 
@@ -174,17 +187,28 @@ namespace DailyDungeon.Pages
             {
                 try
                 {
-                    string deleteQuery = $"DELETE FROM {username}_tasks WHERE id_task = {selectedTask.id_task}";
-                    DailyDungeonEntities.GetContext().Database.ExecuteSqlCommand(deleteQuery);
-                    DailyDungeonEntities.GetContext().SaveChanges();
-                    DailyDungeonEntities.GetContext().ChangeTracker.Entries().ToList().ForEach(p => p.Reload());
-                    string reloadQuery = $"select * from {username}_tasks";
-                    tasksDataGrid.ItemsSource = DailyDungeonEntities.GetContext().Database.SqlQuery<tasks>(reloadQuery).ToList();
-                    MessageBox.Show($"Завдання видалено.");
+                    using (var context = new DailyDungeonEntities())
+                    {
+                        var taskToDelete = context.tasks.FirstOrDefault(t => t.id_task == selectedTask.id_task && t.login_user == username);
+                        if (taskToDelete != null)
+                        {
+                            context.tasks.Remove(taskToDelete);
+                            context.SaveChanges();
+
+                            tasksList = context.tasks.Where(t => t.login_user == username).ToList();
+                            tasksDataGrid.ItemsSource = tasksList;
+
+                            MessageBox.Show("Завдання видалено.");
+                        }
+                        else
+                        {
+                            MessageBox.Show("Завдання не знайдено або вже було видалено.");
+                        }
+                    }    
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message.ToString());
+                    MessageBox.Show($"Виникла помилка при видаленні завдання: {ex.Message}");
                 }
             }
         }

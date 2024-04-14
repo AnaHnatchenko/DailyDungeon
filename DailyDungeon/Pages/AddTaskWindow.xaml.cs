@@ -34,62 +34,37 @@ namespace DailyDungeon.Pages
             DataContext = task;
         }
 
-        public class SelectedItemExistsConverter : IValueConverter
-        {
-            public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-            {
-                return value != null;
-            }
-
-            public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public class SelectedDateExistsConverter : IValueConverter
-        {
-            public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-            {
-                if (value is DateTime selectedDate)
-                {
-                    return selectedDate != DateTime.MinValue;
-                }
-                return false;
-            }
-
-            public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-            {
-                throw new NotImplementedException();
-            }
-        }
-
         private void AddTask_Click(object sender, RoutedEventArgs e)
         {
-            StringBuilder errors = new StringBuilder();
-            if (string.IsNullOrWhiteSpace(task.name_task)) errors.AppendLine("Не вдалося створити завдання! Обов'язково введіть його назву");
-            if (errors.Length > 0)
+            if (string.IsNullOrWhiteSpace(task.name_task))
             {
-                MessageBox.Show(errors.ToString());
+                MessageBox.Show("Не вдалося створити завдання! Обов'язково введіть його назву");
                 return;
             }
             else
             {
+                task.login_user = username;
                 task.name_task = task.name_task.Trim();
-                task.description_task = task.description_task.Trim();
-                if (string.IsNullOrWhiteSpace(task.tag_task)) task.tag_task="";
+                if (string.IsNullOrWhiteSpace(task.description_task)) task.description_task = String.Empty;
+                else task.description_task = task.description_task.Trim();
+                if (string.IsNullOrWhiteSpace(task.tag_task)) task.tag_task = String.Empty;
+                else task.tag_task = task.tag_task.Trim();
                 task.deadline_task = deadlineDatePicker.SelectedDate?.ToString("dd.MM.yyyy");
-                string query = $"insert into {username}_tasks (name_task, description_task, complexity_task, tag_task, deadline_task, is_done) " +
-                    $"values ('{task.name_task}', '{task.description_task}', '{task.complexity_task}', '{task.tag_task}', '{task.deadline_task}', 0)";
+                task.is_done = false;
+
                 try
                 {
-                    DailyDungeonEntities.GetContext().Database.ExecuteSqlCommand(query);
-                    DailyDungeonEntities.GetContext().SaveChanges();
-                    MessageBox.Show($"Завдання успішно створено!");
+                    using (var context = new DailyDungeonEntities())
+                    {
+                        context.tasks.Add(task);
+                        context.SaveChanges();
+
+                        MessageBox.Show("Завдання успішно створено!");
+                    }
                 }
                 catch(Exception ex)
                 {
-                    MessageBox.Show(ex.Message.ToString());
+                    MessageBox.Show($"Виникла помилка при створенні завдання: {ex.Message}");
                 }     
             }
             

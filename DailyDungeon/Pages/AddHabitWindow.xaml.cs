@@ -35,44 +35,37 @@ namespace DailyDungeon.Pages
             DataContext = habit;
         }
 
-        public class SelectedItemExistsConverter : IValueConverter
-        {
-            public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-            {
-                return value != null;
-            }
-
-            public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-            {
-                throw new NotImplementedException();
-            }
-        }
-
         private void AddHabit_Click(object sender, RoutedEventArgs e)
         {
-            StringBuilder errors = new StringBuilder();
-            if (string.IsNullOrWhiteSpace(habit.name_habit)) errors.AppendLine("Не вдалося створити завдання! Обов'язково введіть його назву");
-            if (errors.Length > 0)
+            if (string.IsNullOrWhiteSpace(habit.name_habit))
             {
-                MessageBox.Show(errors.ToString());
+                MessageBox.Show("Не вдалося створити завдання! Обов'язково введіть його назву");
                 return;
             }
             else
             {
+                habit.login_user = username;
                 habit.name_habit = habit.name_habit.Trim();
                 habit.description_habit = habit.description_habit.Trim();
-                if (string.IsNullOrWhiteSpace(habit.tag_habit)) habit.tag_habit = "";
-                string query = $"insert into {username}_habits (name_habit, description_habit, complexity_habit, tag_habit, type_habit, is_done) " +
-                    $"values ('{habit.name_habit}', '{habit.description_habit}', '{habit.complexity_habit}', '{habit.tag_habit}', '{habit.type_habit}', 0)";
+                if (string.IsNullOrWhiteSpace(habit.description_habit)) habit.description_habit = String.Empty;
+                else habit.description_habit = habit.description_habit.Trim();
+                if (string.IsNullOrWhiteSpace(habit.tag_habit)) habit.tag_habit = String.Empty;
+                else habit.tag_habit = habit.tag_habit.Trim();
+                habit.is_done = false;
+
                 try
                 {
-                    DailyDungeonEntities.GetContext().Database.ExecuteSqlCommand(query);
-                    DailyDungeonEntities.GetContext().SaveChanges();
-                    MessageBox.Show($"Звичку успішно створено!");
+                    using (var context = new DailyDungeonEntities())
+                    {
+                        context.habits.Add(habit);
+                        context.SaveChanges();
+
+                        MessageBox.Show("Звичку успішно створено!");
+                    }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message.ToString());
+                    MessageBox.Show($"Виникла помилка при створенні звички: {ex.Message}");
                 }
             }
 

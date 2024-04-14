@@ -34,58 +34,52 @@ namespace DailyDungeon.Pages
 
             task = selectedTask;
             DataContext = task;
+
             DateTime deadline = DateTime.ParseExact(task.deadline_task, "dd.MM.yyyy", CultureInfo.InvariantCulture);
             deadlineDatePicker.SelectedDate = deadline;
         }
 
-        public class SelectedItemExistsConverter : IValueConverter
-        {
-            public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-            {
-                return value != null;
-            }
-
-            public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public class SelectedDateExistsConverter : IValueConverter
-        {
-            public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-            {
-                if (value is DateTime selectedDate)
-                {
-                    return selectedDate != DateTime.MinValue;
-                }
-                return false;
-            }
-
-            public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-            {
-                throw new NotImplementedException();
-            }
-        }
-
         private void EditTask_Click(object sender, RoutedEventArgs e)
         {
-            task.name_task = task.name_task.Trim();
-            task.description_task = task.description_task.Trim();
-            if (string.IsNullOrWhiteSpace(task.tag_task)) task.tag_task = "";
-            task.deadline_task = deadlineDatePicker.SelectedDate?.ToString("dd.MM.yyyy");
-            string query = $"update {username}_tasks set name_task = '{task.name_task}', description_task = '{task.description_task}', complexity_task = '{task.complexity_task}', " +
-                $"tag_task = '{task.tag_task}', deadline_task = '{task.deadline_task}' where id_task = '{task.id_task}'";
-            try
+            if (string.IsNullOrWhiteSpace(task.name_task))
             {
-                DailyDungeonEntities.GetContext().Database.ExecuteSqlCommand(query);
-                DailyDungeonEntities.GetContext().SaveChanges();
-                MessageBox.Show($"Завдання успішно відредаговано!");
+                MessageBox.Show("Не вдалося створити завдання! Обов'язково введіть його назву");
+                return;
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show(ex.Message.ToString());
+                try
+                {
+                    using (var context = new DailyDungeonEntities())
+                    {
+                        var taskToUpdate = context.tasks.FirstOrDefault(t => t.id_task == task.id_task);
+                        if (taskToUpdate != null)
+                        {
+                            taskToUpdate.login_user = username;
+                            taskToUpdate.name_task = task.name_task.Trim();
+                            if (string.IsNullOrWhiteSpace(task.description_task)) taskToUpdate.description_task = String.Empty;
+                            else taskToUpdate.description_task = task.description_task.Trim();
+                            taskToUpdate.complexity_task = task.complexity_task;
+                            if (string.IsNullOrWhiteSpace(task.tag_task)) taskToUpdate.tag_task = String.Empty;
+                            else taskToUpdate.tag_task = task.tag_task.Trim();
+                            taskToUpdate.deadline_task = deadlineDatePicker.SelectedDate?.ToString("dd.MM.yyyy");
+                            taskToUpdate.is_done = false;
+
+                            context.SaveChanges();
+                            MessageBox.Show("Завдання успішно відредаговано!");
+                        }
+                        else
+                        {
+                            MessageBox.Show("Завдання не знайдено.");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Виникла помилка при редагуванні завдання: {ex.Message}");
+                }
             }
+            
             this.Hide();
         }
 

@@ -16,6 +16,8 @@ namespace DailyDungeon.Pages
 {
     public partial class LoginWindow : Window
     {
+        public string login { get; set; }
+        public string password { get; set; }
         public bool IsMaximized { get; set; } = false;
 
         public LoginWindow()
@@ -83,9 +85,22 @@ namespace DailyDungeon.Pages
 
         private void SignIn_Click(object sender, RoutedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(txtEmail.Text) && !string.IsNullOrEmpty(txtPassword.Password))
+            login = txtLogin.Text;
+            password = txtPassword.Password;
+
+            StringBuilder errors = new StringBuilder();
+            if (string.IsNullOrEmpty(login) && string.IsNullOrEmpty(password)) errors.AppendLine("Будь ласка введіть ваш логін та пароль!");
+            else if (string.IsNullOrEmpty(login) && !string.IsNullOrEmpty(password)) errors.AppendLine("Будь ласка введіть ваш логін!");
+            else if (!string.IsNullOrEmpty(login) && string.IsNullOrEmpty(password)) errors.AppendLine("Будь ласка введіть ваш пароль!");
+            else if (!IsUserExists(login, password)) errors.AppendLine("Неправильний логін або пароль! Такого користувача не існує. Спробуйте ще раз або зареєструйте новий акаунт!");
+            if (errors.Length > 0)
             {
-                var tasksWindow = new TasksWindow(txtEmail.Text, IsMaximized, Color.FromRgb(0x62, 0x3E, 0xD0), new BitmapImage(new Uri("D:/SUTE/ООП/Курсова/DailyDungeon/DailyDungeon/Resources/Images/Avatars/Avatar1.jpg", UriKind.Relative)));
+                MessageBox.Show(errors.ToString());
+                return;
+            }
+            else
+            {
+                var tasksWindow = new TasksWindow(login, IsMaximized);
                 tasksWindow.Show();
                 this.Close();
             }
@@ -95,6 +110,15 @@ namespace DailyDungeon.Pages
         {
             this.Close();
             Application.Current.Shutdown();
+        }
+
+        public bool IsUserExists(string login, string password)
+        {
+            using (var context = new DailyDungeonEntities())
+            {
+                bool userExists = context.users.Any(u => u.login_user == login && u.password_user == password);
+                return userExists;
+            }
         }
     }
 }

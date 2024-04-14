@@ -18,14 +18,12 @@ namespace DailyDungeon.Pages
     {
         public string username { get; set; }
         public int moneyCount { get; set; }
+        public List<habits> habitsList = new List<habits>();
         public bool IsMaximized { get; set; }
-
-        public Color backgroundColor { get; set; } = Color.FromRgb(0x62, 0x3E, 0xD0);
-        public ImageSource avatarImage { get; set; } = new BitmapImage(new Uri("D:/SUTE/ООП/Курсова/DailyDungeon/DailyDungeon/Resources/Images/Avatars/Avatar1.jpg", UriKind.Relative));
 
         private readonly string[] habitSortCategory = { "Назвою", "Описом", "Складністю", "Типом", "Тегом" };
 
-        public HabitsWindow(string userName, bool isMaximized, Color Background, ImageSource Avatar)
+        public HabitsWindow(string userName, bool isMaximized)
         {
             InitializeComponent();
             IsMaximized = isMaximized;
@@ -38,11 +36,15 @@ namespace DailyDungeon.Pages
             this.Deactivated += Window_Deactivated;
             this.Activated += Window_Activated;
             this.IsHitTestVisibleChanged += Window_IsHitTestVisibleChanged;
+            this.DataContext = this;
 
-            username = "Anastasia";
+            username = userName;
             userTextBlock.Text = username;
             using (var context = new DailyDungeonEntities())
             {
+                habitsList = context.habits.Where(t => t.login_user == username).ToList();
+                habitsDataGrid.ItemsSource = habitsList;
+
                 var user = context.users.FirstOrDefault(u => u.login_user == username);
                 if (user != null)
                 {
@@ -55,18 +57,22 @@ namespace DailyDungeon.Pages
             }
             moneyCountText.Text = $"{moneyCount}";
 
-            this.DataContext = this;
-
-            string query = $"select * from {username}_habits";
-
-            habitsDataGrid.ItemsSource = DailyDungeonEntities.GetContext().Database.SqlQuery<habits>(query).ToList();
-
-            backgroundColor = Background;
-            avatarImage = Avatar;
-            background.Background = new SolidColorBrush(backgroundColor);
-            avatar.Fill = new ImageBrush(avatarImage);
-
             sortComboBox.ItemsSource = habitSortCategory;
+
+            Color backgroundColor;
+            using (var context = new DailyDungeonEntities())
+            {
+                backgroundColor = (Color)ColorConverter.ConvertFromString(context.backgrounds.Where(b => b.login_user == username && b.is_used).Select(b => b.background_color).FirstOrDefault());
+            }
+            background.Background = new SolidColorBrush(backgroundColor);
+
+            string avatarImage;
+            using (var context = new DailyDungeonEntities())
+            {
+                avatarImage = context.avatars.Where(a => a.login_user == username && a.is_used).Select(a => a.image_source).FirstOrDefault();
+            }
+            BitmapImage imageSource = new BitmapImage(new Uri(avatarImage));
+            avatar.Fill = new ImageBrush(imageSource);
         }
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
@@ -98,21 +104,21 @@ namespace DailyDungeon.Pages
 
         private void Tasks_Click(object sender, RoutedEventArgs e)
         {
-            var tasksWindow = new TasksWindow(username, IsMaximized, backgroundColor, avatarImage);
+            var tasksWindow = new TasksWindow(username, IsMaximized);
             tasksWindow.Show();
             this.Close();
         }
 
         private void Inventory_Click(object sender, RoutedEventArgs e)
         {
-            var inventoryWindow = new InventoryWindow(username, IsMaximized, backgroundColor, avatarImage);
+            var inventoryWindow = new InventoryWindow(username, IsMaximized);
             inventoryWindow.Show();
             this.Close();
         }
 
         private void Shop_Click(object sender, RoutedEventArgs e)
         {
-            var shopWindow = new ShopWindow(username, IsMaximized, backgroundColor, avatarImage);
+            var shopWindow = new ShopWindow(username, IsMaximized);
             shopWindow.Show();
             this.Close();
         }
@@ -160,9 +166,12 @@ namespace DailyDungeon.Pages
         {
             if (Visibility == Visibility.Visible)
             {
-                DailyDungeonEntities.GetContext().ChangeTracker.Entries().ToList().ForEach(p => p.Reload());
-                string query = $"select * from {username}_habits";
-                habitsDataGrid.ItemsSource = DailyDungeonEntities.GetContext().Database.SqlQuery<habits>(query).ToList();
+                using (var context = new DailyDungeonEntities())
+                {
+                    context.ChangeTracker.Entries().ToList().ForEach(p => p.Reload());
+                    habitsList = context.habits.Where(t => t.login_user == username).ToList();
+                    habitsDataGrid.ItemsSource = habitsList;
+                }
             }
         }
 
@@ -173,17 +182,28 @@ namespace DailyDungeon.Pages
             {
                 try
                 {
-                    string deleteQuery = $"DELETE FROM {username}_habits WHERE id_habit = {selectedHabit.id_habit}";
-                    DailyDungeonEntities.GetContext().Database.ExecuteSqlCommand(deleteQuery);
-                    DailyDungeonEntities.GetContext().SaveChanges();
-                    DailyDungeonEntities.GetContext().ChangeTracker.Entries().ToList().ForEach(p => p.Reload());
-                    string reloadQuery = $"select * from {username}_habits";
-                    habitsDataGrid.ItemsSource = DailyDungeonEntities.GetContext().Database.SqlQuery<habits>(reloadQuery).ToList();
-                    MessageBox.Show($"Звичку видалено.");
+                    using (var context = new DailyDungeonEntities())
+                    {
+                        var habitToDelete = context.habits.FirstOrDefault(h => h.id_habit == selectedHabit.id_habit && h.login_user == username);
+                        if (habitToDelete != null)
+                        {
+                            context.habits.Remove(habitToDelete);
+                            context.SaveChanges();
+
+                            habitsList = context.habits.Where(t => t.login_user == username).ToList();
+                            habitsDataGrid.ItemsSource = habitsList;
+
+                            MessageBox.Show("Звичку видалено.");
+                        }
+                        else
+                        {
+                            MessageBox.Show("Звичку не знайдено або вже було видалено.");
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message.ToString());
+                    MessageBox.Show($"Виникла помилка при видаленні звички: {ex.Message}");
                 }
             }
         }

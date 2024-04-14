@@ -128,7 +128,7 @@
                     <TabItem Style="{DynamicResource TabItemStyle1}" Header="Фони">
                         <ScrollViewer Style="{DynamicResource ScrollViewerStyle1}" VerticalScrollBarVisibility="Auto">
                             <WrapPanel x:Name="shopBackgrounds" Orientation="Horizontal">
-                                <Border Style="{StaticResource objectBorder}" MouseDown="Object_Click">
+                                <Border Style="{StaticResource objectBorder}" MouseDown="Object_Click" Visibility="Collapsed">
                                     <Grid>
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="auto"/>
@@ -150,7 +150,7 @@
                     <TabItem Style="{DynamicResource TabItemStyle1}" Header="Аватари">
                         <ScrollViewer Style="{DynamicResource ScrollViewerStyle1}" VerticalScrollBarVisibility="Auto">
                             <WrapPanel x:Name="shopAvatars"  Orientation="Horizontal">
-                                <Border Style="{StaticResource objectBorder}" MouseDown="Object_Click">
+                                <Border Style="{StaticResource objectBorder}" MouseDown="Object_Click" Visibility="Collapsed">
                                     <Grid>
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="auto"/>

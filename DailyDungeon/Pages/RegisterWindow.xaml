@@ -84,10 +84,10 @@
                             </Grid.ColumnDefinitions>
 
                             <Icon:PackIconMaterial Kind="Account" Style="{StaticResource loginTextBoxIcon}"/>
-                            <TextBlock x:Name="textEmail" Grid.Column="1" Text="Логін" Style="{StaticResource textHint}"
+                            <TextBlock x:Name="textLogin" Grid.Column="1" Text="Логін" Style="{StaticResource textHint}"
                                        Margin="10,0,0,0" Padding="3 0 0 0" Grid.ColumnSpan="2" IsHitTestVisible="False"
-                                       Visibility="{Binding ElementName=txtEmail, Path=Text.IsEmpty, Converter={StaticResource BoolToVis}}"/>
-                            <TextBox x:Name="txtEmail" Grid.Column="1" Style="{StaticResource textboxLogin}" Grid.ColumnSpan="2" Margin="10,0,0,0" SelectionBrush="#70512da8"/>
+                                       Visibility="{Binding ElementName=txtLogin, Path=Text.IsEmpty, Converter={StaticResource BoolToVis}}"/>
+                            <TextBox x:Name="txtLogin" Grid.Column="1" Style="{StaticResource textboxLogin}" Grid.ColumnSpan="2" Margin="10,0,0,0" SelectionBrush="#70512da8" MaxLength="20"/>
                         </Grid>
                     </Border>
                     <Border>
@@ -111,7 +111,7 @@
                             <Icon:PackIconMaterial Kind="LockOutline" Style="{StaticResource passwordTextBoxIcon}"/>
                             <TextBlock x:Name="textPassword" Grid.Column="1" Text="Пароль" Style="{StaticResource textHint}"
                                        Margin="10 0 0 0" Padding="3 0 0 0" IsHitTestVisible="False"/>
-                            <PasswordBox x:Name="txtPassword" Grid.Column="1" PasswordChanged="txtPassword_PasswordChanged" Style="{StaticResource textboxLogin}" SelectionBrush="#70512da8"/>
+                            <PasswordBox x:Name="txtPassword" Grid.Column="1" PasswordChanged="txtPassword_PasswordChanged" Style="{StaticResource textboxLogin}" SelectionBrush="#70512da8" MaxLength="20"/>
                         </Grid>
                     </Border>
 

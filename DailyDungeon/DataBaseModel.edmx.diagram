@@ -4,10 +4,16 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="e88861ec89f6411da28f82e81767d647" Name="Diagram1">
-        <EntityTypeShape EntityType="DailyDungeonModel.habits" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="DailyDungeonModel.tasks" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="DailyDungeonModel.users" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
+      <Diagram DiagramId="4777452087674843b41a012dade644f6" Name="Diagram1">
+        <EntityTypeShape EntityType="DailyDungeonModel.avatars" Width="1.5" PointX="3" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="DailyDungeonModel.backgrounds" Width="1.5" PointX="3" PointY="4.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="DailyDungeonModel.habits" Width="1.5" PointX="3" PointY="6.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="DailyDungeonModel.tasks" Width="1.5" PointX="3" PointY="10.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="DailyDungeonModel.users" Width="1.5" PointX="0.75" PointY="6" IsExpanded="true" />
+        <AssociationConnector Association="DailyDungeonModel.FK_avatars_users" ManuallyRouted="false" />
+        <AssociationConnector Association="DailyDungeonModel.FK_backgrounds_users" ManuallyRouted="false" />
+        <AssociationConnector Association="DailyDungeonModel.FK_habits_users" ManuallyRouted="false" />
+        <AssociationConnector Association="DailyDungeonModel.FK_tasks_users" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -6,18 +6,9 @@
     
     public partial class DailyDungeonEntities : DbContext
     {
-        private static DailyDungeonEntities context;
         public DailyDungeonEntities()
-            : base("name=DailyDungeonEntities1")
+            : base("name=DailyDungeonEntities")
         {
-        }
-
-        public static DailyDungeonEntities GetContext()
-        {
-            if (context == null)
-                context = new DailyDungeonEntities();
-
-            return context;
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -25,6 +16,8 @@
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<avatars> avatars { get; set; }
+        public virtual DbSet<backgrounds> backgrounds { get; set; }
         public virtual DbSet<habits> habits { get; set; }
         public virtual DbSet<tasks> tasks { get; set; }
         public virtual DbSet<users> users { get; set; }

@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -20,14 +23,12 @@ namespace DailyDungeon.Pages
         public int moneyCount { get; set; }
         public bool IsMaximized { get; set; }
 
-        public Color backgroundColor { get; set; } = Color.FromRgb(0x62, 0x3E, 0xD0);
-        public ImageSource avatarImage { get; set; } = new BitmapImage(new Uri("D:/SUTE/ООП/Курсова/DailyDungeon/DailyDungeon/Resources/Images/Avatars/Avatar1.jpg", UriKind.Relative));
+        public List<Border> backgrounds = new List<Border>();
+        public List<Border> avatars = new List<Border>();
 
-        public ShopWindow(string userName, bool isMaximized, Color Background, ImageSource Avatar)
+        public ShopWindow(string userName, bool isMaximized)
         {
             InitializeComponent();
-            AddShopBackgroundObjects(shopBackgrounds, 100);
-            AddShopAvatarObjects(shopAvatars, 20);
 
             IsMaximized = isMaximized;
             if (IsMaximized)
@@ -38,8 +39,9 @@ namespace DailyDungeon.Pages
 
             this.Deactivated += Window_Deactivated;
             this.Activated += Window_Activated;
+            this.IsHitTestVisibleChanged += Window_IsHitTestVisibleChanged;
 
-            username = "Anastasia";
+            username = userName;
             userTextBlock.Text = username;
             using (var context = new DailyDungeonEntities())
             {
@@ -55,10 +57,27 @@ namespace DailyDungeon.Pages
             }
             moneyCountText.Text = $"{moneyCount}";
 
-            backgroundColor = Background;
-            avatarImage = Avatar;
+            Color backgroundColor;
+            using (var context = new DailyDungeonEntities())
+            {
+                backgroundColor = (Color)ColorConverter.ConvertFromString(context.backgrounds.Where(b => b.login_user == username && b.is_used).Select(b => b.background_color).FirstOrDefault());
+            }
             background.Background = new SolidColorBrush(backgroundColor);
-            avatar.Fill = new ImageBrush(avatarImage);
+
+            string avatarImage;
+            using (var context = new DailyDungeonEntities())
+            {
+                avatarImage = context.avatars.Where(a => a.login_user == username && a.is_used).Select(a => a.image_source).FirstOrDefault();
+            }
+            BitmapImage imageSource = new BitmapImage(new Uri(avatarImage));
+            avatar.Fill = new ImageBrush(imageSource);
+
+            backgrounds.Clear();
+            avatars.Clear();
+            CreateShopBackgroundObjects(100);
+            AddShopBackgroundObjects();
+            CreateShopAvatarObjects(20);
+            AddShopAvatarObjects();
         }
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
@@ -90,21 +109,21 @@ namespace DailyDungeon.Pages
 
         private void Tasks_Click(object sender, RoutedEventArgs e)
         {
-            var tasksWindow = new TasksWindow(username, IsMaximized, backgroundColor, avatarImage);
+            var tasksWindow = new TasksWindow(username, IsMaximized);
             tasksWindow.Show();
             this.Close();
         }
 
         private void Habits_Click(object sender, RoutedEventArgs e)
         {
-            var habitsWindow = new HabitsWindow(username, IsMaximized, backgroundColor, avatarImage);
+            var habitsWindow = new HabitsWindow(username, IsMaximized);
             habitsWindow.Show();
             this.Close();
         }
 
         private void Inventory_Click(object sender, RoutedEventArgs e)
         {
-            var inventoryWindow = new InventoryWindow(username, IsMaximized, backgroundColor, avatarImage);
+            var inventoryWindow = new InventoryWindow(username, IsMaximized);
             inventoryWindow.Show();
             this.Close();
         }
@@ -134,7 +153,7 @@ namespace DailyDungeon.Pages
             Overlay.Visibility = Visibility.Collapsed;
         }
 
-        private void AddShopBackgroundObjects(WrapPanel panel, int count)
+        private void CreateShopBackgroundObjects(int count)
         {
             Random random = new Random();
 
@@ -176,16 +195,17 @@ namespace DailyDungeon.Pages
                 grid.Children.Add(innerBorder);
 
                 border.Child = grid;
-                panel.Children.Add(border);
+                backgrounds.Add(border);
             }
         }
 
-        private void AddShopAvatarObjects(WrapPanel panel, int count)
+        private void CreateShopAvatarObjects(int count)
         {
-            for (int i = 3; i < count; i++)
+            for (int i = 1; i < count; i++)
             {
                 Border border = new Border();
                 border.Style = (Style)Application.Current.FindResource("objectBorder");
+                border.Name = $"Avatar{i}";
                 border.MouseDown += Object_Click;
 
                 Rectangle rectangle = new Rectangle();
@@ -194,7 +214,7 @@ namespace DailyDungeon.Pages
 
                 string imagePath = $"D:/SUTE/ООП/Курсова/DailyDungeon/DailyDungeon/Resources/Images/Avatars/Avatar{i}.jpg";
                 ImageSource imageSource = new BitmapImage(new Uri(imagePath, UriKind.Relative));
-                rectangle.Fill = new ImageBrush(imageSource); ;
+                rectangle.Fill = new ImageBrush(imageSource);
 
                 Border innerBorder = new Border();
                 innerBorder.Style = (Style)Application.Current.FindResource("shopObjectInnerBorder");
@@ -225,7 +245,37 @@ namespace DailyDungeon.Pages
                 grid.Children.Add(innerBorder);
 
                 border.Child = grid;
-                panel.Children.Add(border);
+                avatars.Add(border);
+            }
+        }
+
+        private void AddShopBackgroundObjects()
+        {
+            shopBackgrounds.Children.Clear(); 
+            foreach (var border in backgrounds)
+            {
+                shopBackgrounds.Children.Add(border);
+            }
+        }
+
+        private void AddShopAvatarObjects()
+        {
+            List<string> inventory = new List<string>();
+            using (var context = new DailyDungeonEntities())
+            {
+                inventory = context.avatars.Where(i => i.login_user == username).Select(i => i.image_source).ToList();
+            }
+            for (int i = 0; i < inventory.Count; i++)
+            {
+                string temp = System.IO.Path.GetFileNameWithoutExtension(inventory[i]);
+                inventory[i] = temp;
+            }
+            avatars.RemoveAll(border => inventory.Contains(border.Name));
+
+            shopAvatars.Children.Clear();
+            foreach (var border in avatars)
+            {
+                shopAvatars.Children.Add(border);
             }
         }
 
@@ -236,14 +286,53 @@ namespace DailyDungeon.Pages
                 if (rectangle.Fill is SolidColorBrush solidColorBrush)
                 {
                     Color color = solidColorBrush.Color;
-                    var shopObjectInfoWindow = new ShopObjectInfoWindow(username, color);
+                    var shopObjectInfoWindow = new ShopObjectInfoWindow(border, username, color);
+                    shopObjectInfoWindow.BuyObject += BuyObject;
                     shopObjectInfoWindow.ShowDialog();
                 }
                 else
                 {
-                    var shopObjectInfoWindow = new ShopObjectInfoWindow(username, ((ImageBrush)rectangle.Fill).ImageSource);
+                    var shopObjectInfoWindow = new ShopObjectInfoWindow(border, username, ((ImageBrush)rectangle.Fill).ImageSource);
+                    shopObjectInfoWindow.BuyObject += BuyObject;
                     shopObjectInfoWindow.ShowDialog();
                 }
+            }
+        }
+
+        private void BuyObject(object sender, Border Object)
+        {
+            if (Object.Child is Grid grid && grid.Children.Count > 0 && grid.Children[0] is Rectangle rectangle)
+            {
+                if (rectangle.Fill is SolidColorBrush solidColorBrush)
+                {
+                    backgrounds.RemoveAll(border => border == Object);
+                    AddShopBackgroundObjects();
+                }
+                else
+                {
+                    AddShopAvatarObjects();
+                }
+            }
+
+        }
+
+        private void Window_IsHitTestVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (Visibility == Visibility.Visible)
+            {
+                using (var context = new DailyDungeonEntities())
+                {
+                    var user = context.users.FirstOrDefault(u => u.login_user == username);
+                    if (user != null)
+                    {
+                        moneyCount = user.money_count;
+                    }
+                    else
+                    {
+                        moneyCount = 0;
+                    }
+                }
+                moneyCountText.Text = $"{moneyCount}";
             }
         }
     }

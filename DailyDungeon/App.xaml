@@ -475,6 +475,9 @@
         <SolidColorBrush x:Key="OptionMark.Disabled.Border" Color="#FFBCBCBC"/>
         <SolidColorBrush x:Key="OptionMark.Disabled.Glyph" Color="#FF707070"/>
         <Style x:Key="CheckBoxStyle1" TargetType="{x:Type CheckBox}">
+            <EventSetter Event="Checked" Handler="CheckBox_Changed"/>
+            <EventSetter Event="Unchecked" Handler="CheckBox_Changed"/>
+            
             <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
             <Setter Property="Background" Value="{StaticResource OptionMark.Static.Background}"/>
             <Setter Property="BorderBrush" Value="#dae2ea"/>
