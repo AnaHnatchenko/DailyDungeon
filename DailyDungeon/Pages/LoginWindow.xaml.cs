@@ -1,16 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace DailyDungeon.Pages
 {
@@ -39,10 +29,7 @@ namespace DailyDungeon.Pages
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.ChangedButton == MouseButton.Left)
-            {
-                this.DragMove();
-            }
+            if (e.ChangedButton == MouseButton.Left) this.DragMove();
         }
 
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -66,14 +53,8 @@ namespace DailyDungeon.Pages
 
         private void txtPassword_PasswordChanged(object sender, RoutedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(txtPassword.Password) && txtPassword.Password.Length > 0)
-            {
-                textPassword.Visibility = Visibility.Collapsed;
-            }
-            else
-            {
-                textPassword.Visibility = Visibility.Visible;
-            }
+            if (!string.IsNullOrEmpty(txtPassword.Password) && txtPassword.Password.Length > 0) textPassword.Visibility = Visibility.Collapsed;
+            else textPassword.Visibility = Visibility.Visible;
         }
 
         private void Register_Click(object sender, RoutedEventArgs e)
@@ -92,7 +73,7 @@ namespace DailyDungeon.Pages
             if (string.IsNullOrEmpty(login) && string.IsNullOrEmpty(password)) errors.AppendLine("Будь ласка введіть ваш логін та пароль!");
             else if (string.IsNullOrEmpty(login) && !string.IsNullOrEmpty(password)) errors.AppendLine("Будь ласка введіть ваш логін!");
             else if (!string.IsNullOrEmpty(login) && string.IsNullOrEmpty(password)) errors.AppendLine("Будь ласка введіть ваш пароль!");
-            else if (!IsUserExists(login, password)) errors.AppendLine("Неправильний логін або пароль! Такого користувача не існує. Спробуйте ще раз або зареєструйте новий акаунт!");
+            else if (!DataBaseModel.IsUserExists(login, password)) errors.AppendLine("Неправильний логін або пароль! Такого користувача не існує. Спробуйте ще раз або зареєструйте новий акаунт!");
             if (errors.Length > 0)
             {
                 MessageBox.Show(errors.ToString());
@@ -110,15 +91,6 @@ namespace DailyDungeon.Pages
         {
             this.Close();
             Application.Current.Shutdown();
-        }
-
-        public bool IsUserExists(string login, string password)
-        {
-            using (var context = new DailyDungeonEntities())
-            {
-                bool userExists = context.users.Any(u => u.login_user == login && u.password_user == password);
-                return userExists;
-            }
         }
     }
 }

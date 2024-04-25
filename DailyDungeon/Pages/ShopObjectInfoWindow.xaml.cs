@@ -1,17 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace DailyDungeon.Pages
 {
@@ -29,22 +19,9 @@ namespace DailyDungeon.Pages
             username = userName;
 
             this.DataContext = this;
-            using (var context = new DailyDungeonEntities())
-            {
-                var user = context.users.FirstOrDefault(u => u.login_user == username);
-                if (user != null)
-                {
-                    moneyCount = user.money_count;
-                }
-                else
-                {
-                    moneyCount = 0;
-                }
-            }
-            if (moneyCount < 50) 
-            {
-                buyButton.IsEnabled = false;
-            }
+
+            moneyCount = DataBaseModel.GetUserMoneyCount(username);
+            if (moneyCount < 50) buyButton.IsEnabled = false;
 
             Sender = sender;
         }
@@ -58,22 +35,9 @@ namespace DailyDungeon.Pages
             username = userName;
 
             this.DataContext = this;
-            using (var context = new DailyDungeonEntities())
-            {
-                var user = context.users.FirstOrDefault(u => u.login_user == username);
-                if (user != null)
-                {
-                    moneyCount = user.money_count;
-                }
-                else
-                {
-                    moneyCount = 0;
-                }
-            }
-            if (moneyCount < 100)
-            {
-                buyButton.IsEnabled = false;
-            }
+
+            moneyCount = DataBaseModel.GetUserMoneyCount(username);
+            if (moneyCount < 100) buyButton.IsEnabled = false;
 
             Sender = sender;
         }
@@ -94,17 +58,10 @@ namespace DailyDungeon.Pages
                     background_color = color.ToString(),
                     is_used = false
                 };
+
                 try
                 {
-                    using (var context = new DailyDungeonEntities())
-                    {
-                        var user = context.users.FirstOrDefault(u => u.login_user == username);
-                        user.money_count = moneyCount - 50;
-                        context.backgrounds.Add(background);
-                        context.SaveChanges();
-
-                        MessageBox.Show("Фон успішно придбано та додано до інвентарю!");
-                    }
+                    DataBaseModel.BuyBackground(username, background);
                 }
                 catch (Exception ex)
                 {
@@ -122,15 +79,7 @@ namespace DailyDungeon.Pages
                 };
                 try
                 {
-                    using (var context = new DailyDungeonEntities())
-                    {
-                        var user = context.users.FirstOrDefault(u => u.login_user == username);
-                        user.money_count = moneyCount - 100;
-                        context.avatars.Add(avatar);
-                        context.SaveChanges();
-
-                        MessageBox.Show("Аватар успішно придбано та додано до інвентарю!");
-                    }
+                    DataBaseModel.BuyAvatar(username, avatar);
                 }
                 catch (Exception ex)
                 {

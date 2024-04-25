@@ -1,15 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Security.AccessControl;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -43,26 +35,10 @@ namespace DailyDungeon.Pages
 
             username = userName;
             userTextBlock.Text = username;
-            using (var context = new DailyDungeonEntities())
-            {
-                var user = context.users.FirstOrDefault(u => u.login_user == username);
-                if (user != null) moneyCount = user.money_count;
-            }
-            moneyCountText.Text = $"{moneyCount}";
 
-            Color backgroundColor;
-            using (var context = new DailyDungeonEntities())
-            {
-                backgroundColor = (Color)ColorConverter.ConvertFromString(context.backgrounds.Where(b => b.login_user == username && b.is_used).Select(b => b.background_color).FirstOrDefault());
-            }
-            background.Background = new SolidColorBrush(backgroundColor);
-
-            string avatarImage;
-            using (var context = new DailyDungeonEntities())
-            {
-                avatarImage = context.avatars.Where(a => a.login_user == username && a.is_used).Select(a => a.image_source).FirstOrDefault();
-            }
-            BitmapImage imageSource = new BitmapImage(new Uri(avatarImage));
+            moneyCountText.Text = DataBaseModel.GetUserMoneyCount(username).ToString();
+            background.Background = new SolidColorBrush(DataBaseModel.GetBackgroundColor(username));
+            BitmapImage imageSource = new BitmapImage(new Uri(DataBaseModel.GetAvatarImage(username)));
             avatar.Fill = new ImageBrush(imageSource);
 
             backgrounds.Clear();
@@ -75,10 +51,7 @@ namespace DailyDungeon.Pages
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.ChangedButton == MouseButton.Left)
-            {
-                this.DragMove();
-            }
+            if (e.ChangedButton == MouseButton.Left) this.DragMove();
         }
 
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -253,11 +226,7 @@ namespace DailyDungeon.Pages
 
         private void AddShopAvatarObjects()
         {
-            List<string> inventory = new List<string>();
-            using (var context = new DailyDungeonEntities())
-            {
-                inventory = context.avatars.Where(i => i.login_user == username).Select(i => i.image_source).ToList();
-            }
+            var inventory = DataBaseModel.GetUsedAvatars(username);
             for (int i = 0; i < inventory.Count; i++)
             {
                 string temp = System.IO.Path.GetFileNameWithoutExtension(inventory[i]);
@@ -311,15 +280,7 @@ namespace DailyDungeon.Pages
 
         private void Window_IsHitTestVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (Visibility == Visibility.Visible)
-            {
-                using (var context = new DailyDungeonEntities())
-                {
-                    var user = context.users.FirstOrDefault(u => u.login_user == username);
-                    if (user != null) moneyCount = user.money_count;
-                }
-                moneyCountText.Text = $"{moneyCount}";
-            }
+            if (Visibility == Visibility.Visible) moneyCountText.Text = DataBaseModel.GetUserMoneyCount(username).ToString();
         }
     }
 }

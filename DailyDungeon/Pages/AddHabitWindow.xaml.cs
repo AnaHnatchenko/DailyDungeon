@@ -1,17 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace DailyDungeon.Pages
 {
@@ -42,30 +30,21 @@ namespace DailyDungeon.Pages
                 MessageBox.Show("Не вдалося створити завдання! Обов'язково введіть його назву");
                 return;
             }
-            else
+           
+            try
             {
                 habit.login_user = username;
                 habit.name_habit = habit.name_habit.Trim();
-                if (string.IsNullOrWhiteSpace(habit.description_habit)) habit.description_habit = String.Empty;
-                else habit.description_habit = habit.description_habit.Trim();
-                if (string.IsNullOrWhiteSpace(habit.tag_habit)) habit.tag_habit = String.Empty;
-                else habit.tag_habit = habit.tag_habit.Trim();
+                habit.description_habit = string.IsNullOrWhiteSpace(habit.description_habit) ? string.Empty : habit.description_habit.Trim();
+                habit.tag_habit = string.IsNullOrWhiteSpace(habit.tag_habit) ? string.Empty : habit.tag_habit.Trim();
                 habit.is_done = false;
 
-                try
-                {
-                    using (var context = new DailyDungeonEntities())
-                    {
-                        context.habits.Add(habit);
-                        context.SaveChanges();
-
-                        MessageBox.Show("Звичку успішно створено!");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Виникла помилка при створенні звички: {ex.Message}");
-                }
+                DataBaseModel.CreateHabit(habit);
+                MessageBox.Show("Звичку успішно створено!");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Виникла помилка при створенні звички: {ex.Message}");
             }
 
             this.Hide();

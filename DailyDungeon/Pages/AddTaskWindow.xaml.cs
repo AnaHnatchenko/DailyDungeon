@@ -1,18 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System.Xml.Linq;
 
 namespace DailyDungeon.Pages
 {
@@ -41,33 +28,24 @@ namespace DailyDungeon.Pages
                 MessageBox.Show("Не вдалося створити завдання! Обов'язково введіть його назву");
                 return;
             }
-            else
+
+            try
             {
                 task.login_user = username;
                 task.name_task = task.name_task.Trim();
-                if (string.IsNullOrWhiteSpace(task.description_task)) task.description_task = String.Empty;
-                else task.description_task = task.description_task.Trim();
-                if (string.IsNullOrWhiteSpace(task.tag_task)) task.tag_task = String.Empty;
-                else task.tag_task = task.tag_task.Trim();
+                task.description_task = string.IsNullOrWhiteSpace(task.description_task) ? string.Empty : task.description_task.Trim();
+                task.tag_task = string.IsNullOrWhiteSpace(task.tag_task) ? string.Empty : task.tag_task.Trim();
                 task.deadline_task = deadlineDatePicker.SelectedDate?.ToString("dd.MM.yyyy");
                 task.is_done = false;
 
-                try
-                {
-                    using (var context = new DailyDungeonEntities())
-                    {
-                        context.tasks.Add(task);
-                        context.SaveChanges();
-
-                        MessageBox.Show("Завдання успішно створено!");
-                    }
-                }
-                catch(Exception ex)
-                {
-                    MessageBox.Show($"Виникла помилка при створенні завдання: {ex.Message}");
-                }     
+                DataBaseModel.CreateTask(task);
+                MessageBox.Show("Завдання успішно створено!");
             }
-            
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Виникла помилка при створенні завдання: {ex.Message}");
+            }
+
             this.Hide();
         }
 

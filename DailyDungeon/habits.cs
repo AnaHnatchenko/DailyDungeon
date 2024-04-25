@@ -18,28 +18,12 @@ namespace DailyDungeon
         {
             int cost = 0;
 
-            if (complexity_habit == "Легко")
-            {
-                cost = 50;
-            }
-            else if (complexity_habit == "Середньо")
-            {
-                cost = 100;
-            }
-            else if (complexity_habit == "Складно")
-            {
-                cost = 150;
-            }
+            if (complexity_habit == "Легко") cost = 50;
+            else if (complexity_habit == "Середньо") cost = 100;
+            else if (complexity_habit == "Складно") cost = 150;
 
-            if (type_habit == "Нейтральна")
-            {
-                cost = 0;
-            }
-            else if (type_habit == "Негативна")
-            {
-                cost = -cost;
-            }
-
+            if (type_habit == "Нейтральна") cost = 0;
+            else if (type_habit == "Негативна") cost = -cost;
             return cost;
         }
 
