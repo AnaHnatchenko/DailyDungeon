@@ -1,6 +1,5 @@
 namespace DailyDungeon
 {
-    using System;
     using System.Collections.Generic;
     
     public partial class users

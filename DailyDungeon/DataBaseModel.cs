@@ -48,7 +48,7 @@ namespace DailyDungeon
             }
         }
 
-            public static int GetUserMoneyCount(string username)
+        public static int GetUserMoneyCount(string username)
         {
             using (var context = new DailyDungeonEntities())
             {

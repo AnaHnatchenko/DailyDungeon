@@ -1,8 +1,5 @@
 namespace DailyDungeon
 {
-    using System;
-    using System.Collections.Generic;
-    
     public partial class habits
     {
         public int id_habit { get; set; }

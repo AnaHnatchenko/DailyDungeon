@@ -124,14 +124,12 @@ namespace DailyDungeon.Pages
                 if (rectangle.Fill is SolidColorBrush solidColorBrush)
                 {
                     Color color = solidColorBrush.Color;
-                    Color backgroundColor = ((SolidColorBrush)background.Background).Color;
                     var inventoryObjectInfoWindow = new InventoryObjectInfoWindow(username, color);
                     inventoryObjectInfoWindow.ShowDialog();
                 }
                 else
                 {
                     ImageSource image = ((ImageBrush)rectangle.Fill).ImageSource;
-                    ImageSource avatarImage = ((ImageBrush)avatar.Fill).ImageSource;
                     var inventoryObjectInfoWindow = new InventoryObjectInfoWindow(username, image);
                     inventoryObjectInfoWindow.ShowDialog();
                 }
@@ -141,11 +139,11 @@ namespace DailyDungeon.Pages
         private void AddInventoryBackgroundObjects(WrapPanel panel, int i)
         {
             Border border = new Border();
-            border.Style = (Style)System.Windows.Application.Current.FindResource("objectBorder");
+            border.Style = (Style)Application.Current.FindResource("objectBorder");
             border.MouseDown += Object_Click;
 
             Rectangle rectangle = new Rectangle();
-            rectangle.Style = (Style)System.Windows.Application.Current.FindResource("objectImage");
+            rectangle.Style = (Style)Application.Current.FindResource("objectImage");
             rectangle.Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundsList[i].background_color));
 
             border.Child = rectangle;
@@ -155,11 +153,11 @@ namespace DailyDungeon.Pages
         private void AddInventoryAvatarObjects(WrapPanel panel, int i)
         {
             Border border = new Border();
-            border.Style = (Style)System.Windows.Application.Current.FindResource("objectBorder");
+            border.Style = (Style)Application.Current.FindResource("objectBorder");
             border.MouseDown += Object_Click;
 
             Rectangle rectangle = new Rectangle();
-            rectangle.Style = (Style)System.Windows.Application.Current.FindResource("objectImage");
+            rectangle.Style = (Style)Application.Current.FindResource("objectImage");
 
             string imagePath = $"{avatarsList[i].image_source}";
             ImageSource imageSource = new BitmapImage(new Uri(imagePath, UriKind.Relative));

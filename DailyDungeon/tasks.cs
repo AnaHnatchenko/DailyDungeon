@@ -1,8 +1,5 @@
 namespace DailyDungeon
 {
-    using System;
-    using System.Collections.Generic;
-    
     public partial class tasks
     {
         public int id_task { get; set; }

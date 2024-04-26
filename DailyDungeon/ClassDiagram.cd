@@ -75,8 +75,11 @@
   </Class>
   <Class Name="DailyDungeon.Pages.EditHabitWindow" BaseTypeListCollapsed="true">
     <Position X="20" Y="3.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
     <NestedTypes>
-      <Class Name="DailyDungeon.Pages.EditHabitWindow.SelectedItemExistsConverter" Collapsed="true">
+      <Class Name="DailyDungeon.Pages.EditHabitWindow.SelectedItemExistsConverter">
         <TypeIdentifier>
           <NewMemberFileName>Pages\EditHabitWindow.xaml.cs</NewMemberFileName>
         </TypeIdentifier>

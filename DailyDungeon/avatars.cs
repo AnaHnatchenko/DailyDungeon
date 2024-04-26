@@ -1,8 +1,5 @@
 namespace DailyDungeon
 {
-    using System;
-    using System.Collections.Generic;
-    
     public partial class avatars
     {
         public int id_avatar { get; set; }

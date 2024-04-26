@@ -1,8 +1,5 @@
 namespace DailyDungeon
 {
-    using System;
-    using System.Collections.Generic;
-    
     public partial class backgrounds
     {
         public int id_background { get; set; }
