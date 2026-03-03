@@ -178,7 +178,7 @@ namespace DailyDungeon.Pages
                 rectangle.Style = (Style)Application.Current.FindResource("shopObjectImageAvatar");
 
 
-                string imagePath = $"D:/SUTE/ООП/Курсова/DailyDungeon/DailyDungeon/Resources/Images/Avatars/Avatar{i}.jpg";
+                string imagePath = $"G:/SUTE/ООП/Курсова/DailyDungeon/DailyDungeon/Resources/Images/Avatars/Avatar{i}.jpg";
                 ImageSource imageSource = new BitmapImage(new Uri(imagePath, UriKind.Relative));
                 rectangle.Fill = new ImageBrush(imageSource);
 

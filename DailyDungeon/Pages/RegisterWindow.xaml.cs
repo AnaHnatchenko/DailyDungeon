@@ -87,7 +87,7 @@ namespace DailyDungeon.Pages
                 avatars avatar = new avatars()
                 {
                     login_user = login,
-                    image_source = "D:/SUTE/ООП/Курсова/DailyDungeon/DailyDungeon/Resources/Images/Avatars/Avatar1.jpg",
+                    image_source = "G:/SUTE/ООП/Курсова/DailyDungeon/DailyDungeon/Resources/Images/Avatars/Avatar1.jpg",
                     is_used = true
                 };
 
