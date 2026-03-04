@@ -14,7 +14,7 @@ namespace DailyDungeon
         public int ExecutionCost()
         {
             int cost = 0;
-            if (complexity_task == "Легко")  cost = 50;
+            if (complexity_task == "Легко") cost = 50;
             else if (complexity_task == "Середньо") cost = 100;
             else if (complexity_task == "Складно") cost = 150;
             return cost;

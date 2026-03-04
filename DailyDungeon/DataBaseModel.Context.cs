@@ -1,5 +1,6 @@
 ﻿namespace DailyDungeon
 {
+    using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
@@ -9,7 +10,7 @@
             : base("name=DailyDungeonEntities")
         {
         }
-
+    
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             throw new UnintentionalCodeFirstException();

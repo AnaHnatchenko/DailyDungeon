@@ -4,14 +4,14 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="Хранилище DailyDungeonModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="avatars">
           <Key>
             <PropertyRef Name="id_avatar" />
           </Key>
           <Property Name="id_avatar" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="login_user" Type="varchar" MaxLength="20" Nullable="false" />
-          <Property Name="image_source" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="login_user" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="image_source" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="is_used" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="backgrounds">
@@ -19,8 +19,8 @@
             <PropertyRef Name="id_background" />
           </Key>
           <Property Name="id_background" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="login_user" Type="varchar" MaxLength="20" Nullable="false" />
-          <Property Name="background_color" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="login_user" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="background_color" Type="nvarchar" MaxLength="10" Nullable="false" />
           <Property Name="is_used" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="habits">
@@ -28,12 +28,12 @@
             <PropertyRef Name="id_habit" />
           </Key>
           <Property Name="id_habit" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="login_user" Type="varchar" MaxLength="20" Nullable="false" />
-          <Property Name="name_habit" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="description_habit" Type="varchar" MaxLength="300" />
-          <Property Name="complexity_habit" Type="varchar" MaxLength="20" Nullable="false" />
-          <Property Name="type_habit" Type="varchar" MaxLength="20" Nullable="false" />
-          <Property Name="tag_habit" Type="varchar" MaxLength="20" />
+          <Property Name="login_user" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="name_habit" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="description_habit" Type="nvarchar" MaxLength="300" />
+          <Property Name="complexity_habit" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="type_habit" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="tag_habit" Type="nvarchar" MaxLength="20" />
           <Property Name="is_done" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="tasks">
@@ -41,12 +41,12 @@
             <PropertyRef Name="id_task" />
           </Key>
           <Property Name="id_task" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="login_user" Type="varchar" MaxLength="20" Nullable="false" />
-          <Property Name="name_task" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="description_task" Type="varchar" MaxLength="300" />
-          <Property Name="complexity_task" Type="varchar" MaxLength="20" Nullable="false" />
-          <Property Name="deadline_task" Type="varchar" MaxLength="20" Nullable="false" />
-          <Property Name="tag_task" Type="varchar" MaxLength="20" />
+          <Property Name="login_user" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="name_task" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="description_task" Type="nvarchar" MaxLength="300" />
+          <Property Name="complexity_task" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="deadline_task" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="tag_task" Type="nvarchar" MaxLength="20" />
           <Property Name="is_done" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="users">
@@ -54,8 +54,8 @@
             <PropertyRef Name="login_user" />
           </Key>
           <Property Name="id_user" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="login_user" Type="varchar" MaxLength="20" Nullable="false" />
-          <Property Name="password_user" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="login_user" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="password_user" Type="nvarchar" MaxLength="20" Nullable="false" />
           <Property Name="money_count" Type="int" Nullable="false" />
         </EntityType>
         <Association Name="FK_avatars_users">
@@ -106,7 +106,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="Хранилище DailyDungeonModelContainer">
+        <EntityContainer Name="ModelStoreContainer">
           <EntitySet Name="avatars" EntityType="Self.avatars" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="backgrounds" EntityType="Self.backgrounds" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="habits" EntityType="Self.habits" Schema="dbo" store:Type="Tables" />
@@ -133,14 +133,14 @@
     </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="DailyDungeonModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <Schema Namespace="Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityType Name="avatars">
           <Key>
             <PropertyRef Name="id_avatar" />
           </Key>
           <Property Name="id_avatar" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="login_user" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="image_source" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="login_user" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="image_source" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="is_used" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="users" Relationship="Self.FK_avatars_users" FromRole="avatars" ToRole="users" />
         </EntityType>
@@ -149,8 +149,8 @@
             <PropertyRef Name="id_background" />
           </Key>
           <Property Name="id_background" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="login_user" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="background_color" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="login_user" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="background_color" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="is_used" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="users" Relationship="Self.FK_backgrounds_users" FromRole="backgrounds" ToRole="users" />
         </EntityType>
@@ -159,12 +159,12 @@
             <PropertyRef Name="id_habit" />
           </Key>
           <Property Name="id_habit" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="login_user" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="name_habit" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="description_habit" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="complexity_habit" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="type_habit" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="tag_habit" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="login_user" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="name_habit" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="description_habit" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="complexity_habit" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="type_habit" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="tag_habit" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="is_done" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="users" Relationship="Self.FK_habits_users" FromRole="habits" ToRole="users" />
         </EntityType>
@@ -173,12 +173,12 @@
             <PropertyRef Name="id_task" />
           </Key>
           <Property Name="id_task" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="login_user" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="name_task" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="description_task" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="complexity_task" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="deadline_task" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="tag_task" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="login_user" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="name_task" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="description_task" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="complexity_task" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="deadline_task" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="tag_task" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="is_done" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="users" Relationship="Self.FK_tasks_users" FromRole="tasks" ToRole="users" />
         </EntityType>
@@ -187,8 +187,8 @@
             <PropertyRef Name="login_user" />
           </Key>
           <Property Name="id_user" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="login_user" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="password_user" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="login_user" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="password_user" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="money_count" Type="Int32" Nullable="false" />
           <NavigationProperty Name="avatars" Relationship="Self.FK_avatars_users" FromRole="users" ToRole="avatars" />
           <NavigationProperty Name="backgrounds" Relationship="Self.FK_backgrounds_users" FromRole="users" ToRole="backgrounds" />
@@ -271,9 +271,9 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="Хранилище DailyDungeonModelContainer" CdmEntityContainer="DailyDungeonEntities">
+        <EntityContainerMapping StorageEntityContainer="ModelStoreContainer" CdmEntityContainer="DailyDungeonEntities">
           <EntitySetMapping Name="avatars">
-            <EntityTypeMapping TypeName="DailyDungeonModel.avatars">
+            <EntityTypeMapping TypeName="Model.avatars">
               <MappingFragment StoreEntitySet="avatars">
                 <ScalarProperty Name="id_avatar" ColumnName="id_avatar" />
                 <ScalarProperty Name="login_user" ColumnName="login_user" />
@@ -283,7 +283,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="backgrounds">
-            <EntityTypeMapping TypeName="DailyDungeonModel.backgrounds">
+            <EntityTypeMapping TypeName="Model.backgrounds">
               <MappingFragment StoreEntitySet="backgrounds">
                 <ScalarProperty Name="id_background" ColumnName="id_background" />
                 <ScalarProperty Name="login_user" ColumnName="login_user" />
@@ -293,7 +293,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="habits">
-            <EntityTypeMapping TypeName="DailyDungeonModel.habits">
+            <EntityTypeMapping TypeName="Model.habits">
               <MappingFragment StoreEntitySet="habits">
                 <ScalarProperty Name="id_habit" ColumnName="id_habit" />
                 <ScalarProperty Name="login_user" ColumnName="login_user" />
@@ -307,7 +307,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="tasks">
-            <EntityTypeMapping TypeName="DailyDungeonModel.tasks">
+            <EntityTypeMapping TypeName="Model.tasks">
               <MappingFragment StoreEntitySet="tasks">
                 <ScalarProperty Name="id_task" ColumnName="id_task" />
                 <ScalarProperty Name="login_user" ColumnName="login_user" />
@@ -321,7 +321,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="users">
-            <EntityTypeMapping TypeName="DailyDungeonModel.users">
+            <EntityTypeMapping TypeName="Model.users">
               <MappingFragment StoreEntitySet="users">
                 <ScalarProperty Name="id_user" ColumnName="id_user" />
                 <ScalarProperty Name="login_user" ColumnName="login_user" />
@@ -347,7 +347,7 @@
         <DesignerProperty Name="EnablePluralization" Value="false" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
         <DesignerProperty Name="UseLegacyProvider" Value="false" />
-        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
       </DesignerInfoPropertySet>
     </Options>
     <!-- Diagram content (shape and connector positions) -->
