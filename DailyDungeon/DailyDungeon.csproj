@@ -107,11 +107,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DataBaseModel.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="DataBaseModel.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>DataBaseModel.tt</DependentUpon>
-    </Compile>
+    <Compile Include="DataBaseModel.cs" />
     <Compile Include="DataBaseModel.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
