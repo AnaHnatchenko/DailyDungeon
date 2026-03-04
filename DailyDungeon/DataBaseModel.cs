@@ -106,7 +106,8 @@ namespace DailyDungeon
         {
             using (var context = new DailyDungeonEntities())
             {
-                return context.avatars.Where(a => a.login_user == username && a.is_used).Select(a => a.image_source).FirstOrDefault();
+                string imagePath = context.avatars.Where(a => a.login_user == username && a.is_used).Select(a => a.image_source).FirstOrDefault();
+                return $"pack://application:,,,{imagePath}";
             }
         }
 

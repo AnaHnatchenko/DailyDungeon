@@ -57,7 +57,9 @@ namespace DailyDungeon.Pages
             {
                 try
                 {
-                    DataBaseModel.SetAvatarImage(username, image.ToString());
+                    string fullImagePath = image.ToString();
+                    string relativeImagePath = fullImagePath.Replace("pack://application:,,,", "");
+                    DataBaseModel.SetAvatarImage(username, relativeImagePath);
                     this.Hide();
                 }
                 catch (Exception ex)

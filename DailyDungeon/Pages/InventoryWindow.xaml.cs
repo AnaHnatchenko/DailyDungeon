@@ -40,7 +40,7 @@ namespace DailyDungeon.Pages
             background.Background = new SolidColorBrush(DataBaseModel.GetBackgroundColor(username));
             BitmapImage imageSource = new BitmapImage(new Uri(DataBaseModel.GetAvatarImage(username)));
             avatar.Fill = new ImageBrush(imageSource);
-
+            
             avatarsList = DataBaseModel.GetAvatarsList(username);
             backgroundsList = DataBaseModel.GetBackgroundsList(username);
 
@@ -159,8 +159,9 @@ namespace DailyDungeon.Pages
             Rectangle rectangle = new Rectangle();
             rectangle.Style = (Style)Application.Current.FindResource("objectImage");
 
-            string imagePath = $"{avatarsList[i].image_source}";
-            ImageSource imageSource = new BitmapImage(new Uri(imagePath, UriKind.Relative));
+            string dbPath = avatarsList[i].image_source;
+            string fullPackUri = $"pack://application:,,,{dbPath}";
+            ImageSource imageSource = new BitmapImage(new Uri(fullPackUri));
             rectangle.Fill = new ImageBrush(imageSource);
 
             border.Child = rectangle;

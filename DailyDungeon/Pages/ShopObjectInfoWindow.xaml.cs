@@ -71,10 +71,12 @@ namespace DailyDungeon.Pages
             else
             {
                 ImageSource image = ((ImageBrush)objectImage.Fill).ImageSource;
+                string fullImagePath = image.ToString();
+                string relativeImagePath = fullImagePath.Replace("pack://application:,,,", "");
                 avatars avatar = new avatars()
                 {
                     login_user = username,
-                    image_source = image.ToString(),
+                    image_source = relativeImagePath,
                     is_used = false
                 };
                 try
